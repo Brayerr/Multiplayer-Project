@@ -323,7 +323,6 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 
         // Get the playerscore
         ExitGames.Client.Photon.Hashtable scoreHashtable = new();
-        scoreHashtable.Add(SCORE_KEY_NAME, score);
         PhotonNetwork.LocalPlayer.SetCustomProperties(scoreHashtable);
     }
 
