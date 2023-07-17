@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8452718348402603015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8452718348402603013}
+  - component: {fileID: 8452718348402603012}
+  m_Layer: 0
+  m_Name: OnlineCharacterSelectionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8452718348402603013
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8452718348402603015}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0000038146973, y: -1, z: -0.0000038146973}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8452718348402603012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8452718348402603015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e6088af8d11c9409ea8cef667fa4fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectButton: {fileID: 0}
+  NextCharacterButton: {fileID: 0}
+  PreviousCharacterButton: {fileID: 0}
+  availableCharacters:
+  - {fileID: 2060720341077089113, guid: 36a30c7147b980047a39fb5eed06b9d6, type: 3}
+  - {fileID: 2060720341077089113, guid: 4ca53c906996dcf48a511b3f0c228548, type: 3}
+  - {fileID: 2060720341077089113, guid: 275a5af494f760e4dbdb783712bbc2ae, type: 3}
+  - {fileID: 2060720341077089113, guid: 9773168a798df8b4195004022804790f, type: 3}
+  - {fileID: 2060720341077089113, guid: 686c3543313a0344a9806916f15c471c, type: 3}
+  - {fileID: 2060720341077089113, guid: 1dacf6461ff9e864abbbee9edbda35c6, type: 3}
+  ViewSpawnLocation: {fileID: 0}
+  spawnOffset: 10
