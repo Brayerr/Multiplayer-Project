@@ -92,6 +92,16 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
             welcomePrompt2.text = $"Welcome {PhotonNetwork.NickName} press the button to join the server";
             welcomePrompt2.gameObject.SetActive(true);
             joinServer.gameObject.SetActive(true);
+
+            if (playerNickname.text == "BlackBetty")
+            {
+                AudioSource audio = gameObject.AddComponent<AudioSource>();
+                AudioClip clip = Resources.Load<AudioClip>("SFX/Ram Jam  Black Betty");
+                audio.clip = clip;
+                audio.loop = false;
+                audio.volume = 1;
+                audio.Play();
+            }
         }
         else
         {
