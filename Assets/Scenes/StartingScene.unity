@@ -349,7 +349,7 @@ PrefabInstance:
     - target: {fileID: 5943965273362293440, guid: 546ca43f911700b4cb0c940c33b1d2b9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -400
+      value: -400.00003
       objectReference: {fileID: 0}
     - target: {fileID: 5943965273362293440, guid: 546ca43f911700b4cb0c940c33b1d2b9,
         type: 3}
@@ -1003,8 +1003,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1664258893}
   m_HandleRect: {fileID: 1664258892}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.99999994
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1084,7 +1084,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -765.7406}
+  m_AnchoredPosition: {x: 960, y: -759.89}
   m_SizeDelta: {x: 320, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &210894911
@@ -3290,7 +3290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 480, y: -520.62695}
+  m_AnchoredPosition: {x: 480, y: -452.53406}
   m_SizeDelta: {x: 960, y: 897}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &710109690
@@ -3768,7 +3768,7 @@ PrefabInstance:
     - target: {fileID: 5943965273362293440, guid: 546ca43f911700b4cb0c940c33b1d2b9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -400
+      value: -666.66675
       objectReference: {fileID: 0}
     - target: {fileID: 5943965273362293440, guid: 546ca43f911700b4cb0c940c33b1d2b9,
         type: 3}
@@ -5410,8 +5410,7 @@ MonoBehaviour:
   selctedRoomPlayerList: {fileID: 864622264}
   joinRoomButton: {fileID: 1709887059}
   exitButton: {fileID: 1017844193}
-  enterYourScore: {fileID: 0}
-  scrollViewContext: {fileID: 1724784713}
+  scrollViewContent: {fileID: 1724784713}
   scrollbarVertical: {fileID: 1062649405}
   roomUIPrefab: {fileID: 7737194430248164254, guid: a0596ff7da1bc704290bf8b2456e389a,
     type: 3}
@@ -5550,7 +5549,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 26585575}
   m_HandleRect: {fileID: 26585574}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -6346,7 +6345,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1440, y: -520.62695}
+  m_AnchoredPosition: {x: 1440, y: -452.53406}
   m_SizeDelta: {x: 960, y: 897}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1321600207
@@ -9576,7 +9575,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -476.04434}
+  m_AnchoredPosition: {x: 960, y: -472.53403}
   m_SizeDelta: {x: 564.2, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1847392261
@@ -9751,7 +9750,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -166.34811}
+  m_AnchoredPosition: {x: 960, y: -165.17801}
   m_SizeDelta: {x: 1168, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1871114829
@@ -10874,7 +10873,7 @@ PrefabInstance:
     - target: {fileID: 5943965273362293440, guid: 546ca43f911700b4cb0c940c33b1d2b9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -400
+      value: -133.33334
       objectReference: {fileID: 0}
     - target: {fileID: 5943965273362293440, guid: 546ca43f911700b4cb0c940c33b1d2b9,
         type: 3}

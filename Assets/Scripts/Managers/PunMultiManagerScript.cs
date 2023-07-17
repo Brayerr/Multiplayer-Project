@@ -46,7 +46,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     [SerializeField] private Button exitButton;
     [Space]
     [Header("Room Scroll View")]
-    [SerializeField] GameObject scrollViewContext;
+    [SerializeField] GameObject scrollViewContent;
     [SerializeField] GameObject scrollbarVertical;
     [SerializeField] GameObject roomUIPrefab;
     [SerializeField] TMP_Text defualtScrollPrompt;
@@ -146,7 +146,6 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         }
     }
 
-
     #endregion
 
     #region PhotonNetwork Overrides
@@ -227,6 +226,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     
     public override void OnCreatedRoom()
     {
+        if (isMasterClient) { PhotonNetwork.EnableCloseConnection = true; }
         Debug.Log(PhotonNetwork.CurrentRoom.EmptyRoomTtl);
         base.OnCreatedRoom();
         joinRoomButton.interactable = false;
@@ -263,7 +263,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         base.OnJoinRoomFailed(returnCode, message);
         Debug.Log("Failed To Join");
     }
-    
+
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
@@ -303,7 +303,6 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     [ContextMenu("DebugLobbyConnect")]
     public void LobbyConnect() => PhotonNetwork.JoinLobby();
     #endregion
-
 
     [ContextMenu("LoadLevel")]
     public void StartAndLoadLevel()
@@ -355,12 +354,12 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         tmpTempList[0].text = roominfo.Name;
         tmpTempList[1].text = $"{roominfo.PlayerCount}/{roominfo.MaxPlayers}";
         roomUIPrefab.GetComponentInChildren<MyRoomInfo>().SetRoomInfo(roominfo);
-        UIRoomList.Add(Instantiate<GameObject>(roomUIPrefab, scrollViewContext.transform));
+        UIRoomList.Add(Instantiate<GameObject>(roomUIPrefab, scrollViewContent.transform));
     }
 
     public void SelectedRoomsCount(int index) => currentSelctedRoom += index;
 
-
+    [ContextMenu("RoomHand")]
     public void RoomHandler()
     {
         // destroy player list on every update
@@ -392,25 +391,18 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
             }
         }
 
-        Debug.Log("Players:");
         foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
         {
             Debug.Log($"{player.NickName}");
             var playerUI = Instantiate(playerUIPrefab,playerUIContext.transform);
+            PlayerTabIdentity actor = playerUI.GetComponent<PlayerTabIdentity>();
+            actor.SetPlayer(player);
+            actor.KickButtonVisable(isMasterClient);
             TMP_Text[] playerListUI= playerUI.GetComponentsInChildren<TMP_Text>();
             playerListUI[0].text = player.NickName;
             playerListUI[1].text = "N/A";
         }
 
-        if (isMasterClient)
-        {
-            int children = playerUIContext.transform.childCount;
-            for (int i = 0; i < children; i++)
-            {
-                var child = playerUIContext.transform.GetChild(i);
-                var button = child.GetComponentInChildren<Button>();
-            }
-        }
     }
 
     public void LobbyToRoomSwitch(bool switchToRoom)
@@ -461,17 +453,21 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         }
     }
 
-
+    [ContextMenu("Debug Exit Room")]
+    public void ExitRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
 
     #region Handlers
     void UIRoomClear()
     {
-        var childcount = scrollViewContext.transform.childCount;
+        var childcount = scrollViewContent.transform.childCount;
         for (int i = 0; i < childcount; i++)
         {
-            if (scrollViewContext.transform.GetChild(i).tag == "Destructable")
+            if (scrollViewContent.transform.GetChild(i).tag == "Destructable")
             {
-                Destroy(scrollViewContext.transform.GetChild(i).gameObject);
+                Destroy(scrollViewContent.transform.GetChild(i).gameObject);
             }
         }
     }

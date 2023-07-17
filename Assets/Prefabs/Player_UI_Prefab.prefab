@@ -147,9 +147,10 @@ GameObject:
   - component: {fileID: 4950226140678136775}
   - component: {fileID: 3141471161223596721}
   - component: {fileID: 3268971717005103363}
+  - component: {fileID: -7186983005280181015}
   m_Layer: 5
   m_Name: Player_UI_Prefab
-  m_TagString: Untagged
+  m_TagString: Destructable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -241,6 +242,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &-7186983005280181015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960603385298047019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a49576e29756e7e499db9ac6401c5ac7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kickButton: {fileID: 6521534905017544925}
 --- !u!1 &2107682431348691491
 GameObject:
   m_ObjectHideFlags: 0
