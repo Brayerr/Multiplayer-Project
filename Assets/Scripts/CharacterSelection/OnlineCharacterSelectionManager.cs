@@ -10,6 +10,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     [SerializeField] Button NextCharacterButton;
     [SerializeField] Button PreviousCharacterButton;
 
+    [SerializeField] GameObject[] availableCharacters;
 
     private void Start()
     {
