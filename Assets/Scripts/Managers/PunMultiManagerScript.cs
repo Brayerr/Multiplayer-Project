@@ -304,6 +304,23 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     public void LobbyConnect() => PhotonNetwork.JoinLobby();
     #endregion
 
+    #region Handlers
+    void UIRoomClear()
+    {
+        var childcount = scrollViewContent.transform.childCount;
+        for (int i = 0; i < childcount; i++)
+        {
+            if (scrollViewContent.transform.GetChild(i).tag == "Destructable")
+            {
+                Destroy(scrollViewContent.transform.GetChild(i).gameObject);
+            }
+        }
+    }
+    
+    #endregion
+
+    #region Unsorted
+
     [ContextMenu("LoadLevel")]
     public void StartAndLoadLevel()
     {
@@ -459,22 +476,6 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
-    #region Handlers
-    void UIRoomClear()
-    {
-        var childcount = scrollViewContent.transform.childCount;
-        for (int i = 0; i < childcount; i++)
-        {
-            if (scrollViewContent.transform.GetChild(i).tag == "Destructable")
-            {
-                Destroy(scrollViewContent.transform.GetChild(i).gameObject);
-            }
-        }
-    }
-    
-    
-    
-    
     #endregion
 
 }
