@@ -164,6 +164,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         {
             masterStatus.color = Color.green;
             masterStatus.text = "Connected to Master";
+            PhotonNetwork.EnableCloseConnection = true;
             PhotonNetwork.JoinLobby();
         }
     }
@@ -420,6 +421,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
             Debug.Log($"{player.NickName}");
             var playerUI = Instantiate(playerUIPrefab, playerUIContext.transform);
             PlayerTabIdentity actor = playerUI.GetComponent<PlayerTabIdentity>();
+            actor.SetView(photonView);
             actor.SetPlayer(player);
             actor.KickButtonVisable(isMasterClient);
             TMP_Text[] playerListUI = playerUI.GetComponentsInChildren<TMP_Text>();
@@ -503,4 +505,23 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(1);
     }
 
+    [PunRPC]
+    public void KickPlayer(Player player)
+    {
+        if (PhotonNetwork.IsMasterClient && player != PhotonNetwork.MasterClient)
+        {
+            if (PhotonNetwork.CloseConnection(player))
+            {
+                bool isPlayerKicked = true;
+                foreach (var dePlayer in PhotonNetwork.CurrentRoom.Players.Values)
+                {
+                    if (dePlayer == player)
+                    {
+                        isPlayerKicked = false;
+                    }
+                }
+                Debug.Log(player.NickName + ", " + isPlayerKicked);
+            }
+        }
+    }
 }

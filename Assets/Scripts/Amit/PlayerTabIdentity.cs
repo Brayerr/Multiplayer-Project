@@ -10,7 +10,14 @@ public class PlayerTabIdentity : MonoBehaviourPun
 {
     [SerializeField] Button kickButton;
 
+    PhotonView passedView;
+
     Player player;
+
+    public void SetView(PhotonView view)
+    {
+        passedView = view;
+    }
 
     public void SetPlayer(Player player)
     {
@@ -35,18 +42,8 @@ public class PlayerTabIdentity : MonoBehaviourPun
         else { kickButton.gameObject.SetActive(false); }
     }
 
-    public void KickButtonClicker()
+    public void KickButtonClicked()
     {
-        photonView.RPC("KickPlayer", RpcTarget.MasterClient, GetPlayer());
-    }
-
-    [PunRPC]
-    public void KickPlayer(Player player)
-    {
-        if (PhotonNetwork.IsMasterClient && player != PhotonNetwork.MasterClient)
-        {
-            PhotonNetwork.EnableCloseConnection = true;
-            PhotonNetwork.CloseConnection(player);
-        }
+        passedView.RPC("KickPlayer", RpcTarget.MasterClient, GetPlayer());
     }
 }
