@@ -28,12 +28,25 @@ public class PlayerTabIdentity : MonoBehaviourPun
         if (isVisable) { kickButton.gameObject.SetActive(true); 
             if (player == PhotonNetwork.MasterClient)
             {
-                // kickButton.interactable = false; 
+                kickButton.interactable = false; 
             }
 
-            kickButton.interactable = false; // delete this after fixing player kicking
         }
         else { kickButton.gameObject.SetActive(false); }
     }
 
+    public void KickButtonClicker()
+    {
+        photonView.RPC("KickPlayer", RpcTarget.MasterClient, GetPlayer());
+    }
+
+    [PunRPC]
+    public void KickPlayer(Player player)
+    {
+        if (PhotonNetwork.IsMasterClient && player != PhotonNetwork.MasterClient)
+        {
+            PhotonNetwork.EnableCloseConnection = true;
+            PhotonNetwork.CloseConnection(player);
+        }
+    }
 }
