@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using ExitGames.Client.Photon.StructWrapping;
+using Unity.VisualScripting;
 
 public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 {
@@ -66,6 +68,8 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     const string PLAYER_PREFAB_NAME = "PlayerCapsule";
     private const string SCORE_KEY_NAME = "Score";
     public const string LOAD_GAME_NAME = "JoinOrStartGame";
+    public const string PING_HASHTABLE_NAME = "ping";
+
 
     private bool isMasterClient => PhotonNetwork.IsMasterClient;
 
@@ -166,6 +170,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
             masterStatus.text = "Connected to Master";
             PhotonNetwork.EnableCloseConnection = true;
             PhotonNetwork.JoinLobby();
+            PlayerCustomPropPing();
         }
     }
 
@@ -248,6 +253,8 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         LobbyToRoomSwitch(true);
         RoomHandler();
     }
+
+
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
@@ -426,7 +433,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
             actor.KickButtonVisable(isMasterClient);
             TMP_Text[] playerListUI = playerUI.GetComponentsInChildren<TMP_Text>();
             playerListUI[0].text = player.NickName;
-            playerListUI[1].text = "N/A";
+            playerListUI[1].text = ExtractPlayerPing(player);
         }
 
         if (PhotonNetwork.CurrentRoom.PlayerCount > 0)
@@ -497,6 +504,23 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         {
             photonView.RPC(LOAD_GAME_NAME, RpcTarget.AllBuffered);
         }
+    }
+
+    private static void PlayerCustomPropPing()
+    {
+        ExitGames.Client.Photon.Hashtable pingHashtable = new();
+        pingHashtable.Add(PING_HASHTABLE_NAME, PhotonNetwork.GetPing());
+        PhotonNetwork.SetPlayerCustomProperties(pingHashtable);
+    }
+
+    public static string ExtractPlayerPing(Player player)
+    {
+        int playerPing = (int)player.CustomProperties[PING_HASHTABLE_NAME];
+        if (playerPing > -1)
+        {
+            return playerPing.ToString() + " ms";
+        }
+        else return "N/A";
     }
 
     [PunRPC]

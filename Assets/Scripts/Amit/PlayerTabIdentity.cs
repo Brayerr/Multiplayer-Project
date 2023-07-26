@@ -14,6 +14,12 @@ public class PlayerTabIdentity : MonoBehaviourPun
 
     Player player;
 
+    public Player GetPlayer()
+    {
+        if (player == null) return null;
+        return player;
+    }
+
     public void SetView(PhotonView view)
     {
         passedView = view;
@@ -22,12 +28,6 @@ public class PlayerTabIdentity : MonoBehaviourPun
     public void SetPlayer(Player player)
     {
         this.player = player;
-    }
-
-    public Player GetPlayer()
-    {
-        if (player == null) return null;
-        return player;
     }
 
     public void KickButtonVisable(bool isVisable)
