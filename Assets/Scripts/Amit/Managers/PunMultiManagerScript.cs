@@ -341,7 +341,6 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     public void StartAndLoadLevel()
     {
         PhotonNetwork.LoadLevel(1);
-        PhotonNetwork.Instantiate(PLAYER_PREFAB_NAME, Vector3.zero, PlayerPrefab.transform.rotation);
     }
 
 
