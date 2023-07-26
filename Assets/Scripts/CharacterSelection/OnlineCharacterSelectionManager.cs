@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,17 +43,73 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     [PunRPC]
     public void LockInCharacter(PhotonMessageInfo photonMessageInfo)
     {
+        Player[] players = PhotonNetwork.PlayerList;
         //for each player in room
-        //if player character id exists
-        //check if id = current character index
+        foreach (var player in players)
+        {
+            //if player character id exists
+            if (player.CustomProperties.ContainsKey(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY))
+            {
+                //check if id = current character index
+                if ((int)player.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY] == currentCharacterIndex)
+                {
+                    print("someone has this character already");
+                    return;
+                }
+            }
+        }
 
+        print("only i am locking in to character " +  currentCharacterIndex);
         ExitGames.Client.Photon.Hashtable playerHashtable;
-        playerHashtable = PhotonNetwork.LocalPlayer.CustomProperties;
+        playerHashtable = photonMessageInfo.Sender.CustomProperties;
         playerHashtable.Add(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY, currentCharacterIndex);
         photonMessageInfo.Sender.SetCustomProperties(playerHashtable);
     }
 
+    [PunRPC]
+    public void UpdateCharacterSelection(PhotonMessageInfo photonMessageInfo)
+    {
+        //master client checks if players custom properties contain key for characterID
+        //if they do then update choices for player
+    }
+
     #endregion
+
+    public void TryLockInCharacter()
+    {
+        photonView.RPC(LOCK_IN_CHARACTER_RPC, RpcTarget.MasterClient);
+        //check if id is in customproperties
+        StartCoroutine(CheckIfCustomPropertyUpdated(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY));
+    }
+
+    /// <summary>
+    /// Coroutine. checks every second for 3 seconds if the player custom properties updated with the requested key
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator CheckIfCustomPropertyUpdated(string CUSTOM_PROPERTY_KEY)
+    {
+        //every 1 seconds check if contains key
+        for(int i = 0; i < 3;  i++)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY))
+            {
+                print("your character is: " + currentCharacterIndex);
+                yield break;
+            }
+
+            yield return new WaitForSeconds(1f);
+        }
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY))
+        {
+            print("your character is: " + currentCharacterIndex);
+        }
+        else
+        {
+            print("something fucked up along the way, try again");
+        }
+    }
+
 
     public void MoveToNextCharacter()
     {
