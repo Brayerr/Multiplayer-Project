@@ -39,10 +39,8 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
-  - GameStarted
-  - PlayerJoinedSession
-  - JoinOrStartGame
-  - KickPlayer
+  - LockInCharacter
+  - UpdateCharacterSelection
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
