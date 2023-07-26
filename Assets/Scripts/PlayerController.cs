@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool grounded;
 
     [Header("Shooting")]
-    [SerializeField] GameObject arrow;
+    [SerializeField] MoveArrow arrow;
     [SerializeField] Transform shootingPosition;
     [SerializeField] float shootCooldown;
     bool isCountingDown;
@@ -103,6 +103,7 @@ public class PlayerController : MonoBehaviour
     {
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        moveDirection.y = 0;
 
         // on ground
         if (grounded)
@@ -139,10 +140,9 @@ public class PlayerController : MonoBehaviour
 
     void ShootArrow()
     {
-        GameObject shot = Instantiate(arrow, shootingPosition.position, Quaternion.identity);
+        MoveArrow shot = Instantiate(arrow, shootingPosition.position, Quaternion.identity);
         shot.transform.Rotate(orientation.transform.eulerAngles);
-        
-        shootCooldown = 3;
+        shootCooldown = 1;
         isCountingDown = true;
 
     }
