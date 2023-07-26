@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
+    public static event Action PlayerShoot;
+    public static event Action PlayerJump;
+    public static event Action<bool> PlayerWalk;
+
     [Header("Movement")]
     public float moveSpeed;
 
@@ -38,6 +43,7 @@ public class PlayerController : MonoBehaviour
     float verticalInput;
 
     Vector3 moveDirection;
+    Vector3 moveDirectionHolder = Vector3.zero;
 
     Rigidbody rb;
 
@@ -83,11 +89,14 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
+        if (horizontalInput != 0 || verticalInput != 0) PlayerWalk.Invoke(true);
+        else if (horizontalInput == 0 && verticalInput == 0) PlayerWalk.Invoke(false);
+
         // when to jump
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
             readyToJump = false;
-
+            PlayerJump.Invoke();
             Jump();
 
             Invoke(nameof(ResetJump), jumpCooldown);
@@ -95,6 +104,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(shootKey) && shootCooldown <= 0)
         {
+            PlayerShoot.Invoke();
             ShootArrow();
         }
     }
