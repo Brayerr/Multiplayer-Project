@@ -1359,9 +1359,50 @@ PrefabInstance:
       objectReference: {fileID: 393152742}
     - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
         type: 3}
+      propertyPath: characters.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
+        type: 3}
       propertyPath: PreviousCharacterButton
       value: 
       objectReference: {fileID: 205777269}
+    - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
+        type: 3}
+      propertyPath: characters.Array.data[0]
+      value: 
+      objectReference: {fileID: 2060720341077089113, guid: 36a30c7147b980047a39fb5eed06b9d6,
+        type: 3}
+    - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
+        type: 3}
+      propertyPath: characters.Array.data[1]
+      value: 
+      objectReference: {fileID: 2060720341077089113, guid: 4ca53c906996dcf48a511b3f0c228548,
+        type: 3}
+    - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
+        type: 3}
+      propertyPath: characters.Array.data[2]
+      value: 
+      objectReference: {fileID: 2060720341077089113, guid: 275a5af494f760e4dbdb783712bbc2ae,
+        type: 3}
+    - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
+        type: 3}
+      propertyPath: characters.Array.data[3]
+      value: 
+      objectReference: {fileID: 2060720341077089113, guid: 9773168a798df8b4195004022804790f,
+        type: 3}
+    - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
+        type: 3}
+      propertyPath: characters.Array.data[4]
+      value: 
+      objectReference: {fileID: 2060720341077089113, guid: 686c3543313a0344a9806916f15c471c,
+        type: 3}
+    - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
+        type: 3}
+      propertyPath: characters.Array.data[5]
+      value: 
+      objectReference: {fileID: 2060720341077089113, guid: 1dacf6461ff9e864abbbee9edbda35c6,
+        type: 3}
     - target: {fileID: 8452718348402603013, guid: 20b9aadc55b7f694682e7eee83673fd5,
         type: 3}
       propertyPath: m_RootOrder

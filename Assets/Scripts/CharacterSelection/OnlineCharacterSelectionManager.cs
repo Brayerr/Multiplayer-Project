@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ using UnityEngine.UI;
 public class OnlineCharacterSelectionManager : MonoBehaviourPun
 {
     private const string LOCK_IN_CHARACTER_RPC = nameof(LockInCharacter);
+    private const string UPDATE_AVAILABLE_CHARACTERS_RPC = nameof(UpdateAvailableCharacters);
 
     [Header("Selection Buttons")]
     [SerializeField] Button selectButton;
@@ -17,15 +19,28 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     [Space]
 
     [Header("Characters")]
-    [SerializeField] GameObject[] availableCharacters;
+    [SerializeField] GameObject[] characters;
     [SerializeField] Transform ViewSpawnLocation;
     [SerializeField] float spawnOffset = 20f;
+
+    List<int> availableCharacterIDs = new List<int>();
+    List<int> selectedCharacterIDs = new List<int>();
 
     int currentCharacterIndex = 0;
 
     private void Awake()
     {
+        InitializeAvailableCharacterIDs();
+
         CheckIfButtonsInteractable();
+    }
+
+    private void InitializeAvailableCharacterIDs()
+    {
+        for (int i = 0; i < characters.Length; i++)
+        {
+            availableCharacterIDs.Add(i);
+        }
     }
 
     private void Start()
@@ -33,7 +48,8 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         LoadCharactersInScene();
     }
 
-    private void Update()
+    [ContextMenu("Print Player Custom Properties")]
+    public void PrintCustomProperties()
     {
         print(PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]);
     }
@@ -43,6 +59,12 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     [PunRPC]
     public void LockInCharacter(PhotonMessageInfo photonMessageInfo)
     {
+        if(!PhotonNetwork.IsMasterClient)
+        {
+            print("Go away padawan, this is for masters only");
+            return;
+        }
+
         Player[] players = PhotonNetwork.PlayerList;
         //for each player in room
         foreach (var player in players)
@@ -59,18 +81,20 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
             }
         }
 
-        print("only i am locking in to character " +  currentCharacterIndex);
+        print("only i am locking in to character " + currentCharacterIndex);
         ExitGames.Client.Photon.Hashtable playerHashtable;
         playerHashtable = photonMessageInfo.Sender.CustomProperties;
         playerHashtable.Add(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY, currentCharacterIndex);
         photonMessageInfo.Sender.SetCustomProperties(playerHashtable);
+
+        photonView.RPC(UPDATE_AVAILABLE_CHARACTERS_RPC, RpcTarget.AllViaServer);
     }
 
     [PunRPC]
-    public void UpdateCharacterSelection(PhotonMessageInfo photonMessageInfo)
+    public void UpdateAvailableCharacters()
     {
-        //master client checks if players custom properties contain key for characterID
-        //if they do then update choices for player
+        availableCharacterIDs.Remove(currentCharacterIndex);
+        selectedCharacterIDs.Add(currentCharacterIndex);
     }
 
     #endregion
@@ -82,6 +106,18 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         StartCoroutine(CheckIfCustomPropertyUpdated(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY));
     }
 
+    public void LoadCharactersInScene()
+    {
+        int counter = 0;
+        foreach (GameObject character in characters)
+        {
+            Vector3 spawnPosition = new Vector3(ViewSpawnLocation.position.x + spawnOffset * counter, ViewSpawnLocation.position.y, ViewSpawnLocation.position.z);
+            counter++;
+            GameObject newCharacter = Instantiate(character, spawnPosition, Quaternion.identity);
+        }
+    }
+
+
     /// <summary>
     /// Coroutine. checks every second for 3 seconds if the player custom properties updated with the requested key
     /// </summary>
@@ -89,7 +125,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     IEnumerator CheckIfCustomPropertyUpdated(string CUSTOM_PROPERTY_KEY)
     {
         //every 1 seconds check if contains key
-        for(int i = 0; i < 3;  i++)
+        for (int i = 0; i < 3; i++)
         {
             if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY))
             {
@@ -110,6 +146,18 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         }
     }
 
+    #region UI Button Controls
+    void UpdateSelectButton()
+    {
+        if (!availableCharacterIDs.Contains(currentCharacterIndex))
+        {
+            selectButton.interactable = false;
+        }
+        else
+        {
+            selectButton.interactable = true;
+        }
+    }
 
     public void MoveToNextCharacter()
     {
@@ -135,17 +183,17 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
 
     void CheckIfButtonsInteractable()
     {
-        if (availableCharacters.Length == 0)
+        if (characters.Length == 0)
         {
             PreviousCharacterButton.interactable = false;
             NextCharacterButton.interactable = false;
         }
-        else if (currentCharacterIndex == 0 && currentCharacterIndex == availableCharacters.Length - 1)
+        else if (currentCharacterIndex == 0 && currentCharacterIndex == characters.Length - 1)
         {
             PreviousCharacterButton.interactable = false;
             NextCharacterButton.interactable = false;
         }
-        else if (currentCharacterIndex > 0 && currentCharacterIndex < availableCharacters.Length - 1)
+        else if (currentCharacterIndex > 0 && currentCharacterIndex < characters.Length - 1)
         {
             PreviousCharacterButton.interactable = true;
             NextCharacterButton.interactable = true;
@@ -155,21 +203,14 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
             NextCharacterButton.interactable = true;
             PreviousCharacterButton.interactable = false;
         }
-        else if (currentCharacterIndex + 1 >= availableCharacters.Length - 1)
+        else if (currentCharacterIndex + 1 >= characters.Length - 1)
         {
             PreviousCharacterButton.interactable = true;
             NextCharacterButton.interactable = false;
         }
+
+        UpdateSelectButton();
     }
 
-    public void LoadCharactersInScene()
-    {
-        int counter = 0;
-        foreach (GameObject character in availableCharacters)
-        {
-            Vector3 spawnPosition = new Vector3(ViewSpawnLocation.position.x + spawnOffset * counter, ViewSpawnLocation.position.y, ViewSpawnLocation.position.z);
-            counter++;
-            GameObject newCharacter = Instantiate(character, spawnPosition, Quaternion.identity);
-        }
-    }
+    #endregion
 }
