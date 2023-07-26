@@ -1,33 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MoveArrow : MonoBehaviour
 {
-    float speed = 1000;
-    Rigidbody rb;
+    float arrowForce = 2000;
+    [SerializeField] Rigidbody rb;
+    [SerializeField] GameObject arrowHead;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        Shoot();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         Vector3 hitPoint = collision.GetContact(0).point;
-        Explode(hitPoint, collision);
-        
+        Explode(hitPoint);
+        Debug.Log("hit");
+
     }
 
-    void Explode(Vector3 hitPoint, Collision coll)
+    void Explode(Vector3 hitPoint)
     {
-        coll.rigidbody.AddExplosionForce(20, hitPoint, 10, .01f, ForceMode.Impulse);
-        Destroy(this.gameObject);
+        Collider[] hitColliders = Physics.OverlapSphere(hitPoint, 5);
+        foreach (var hitCollider in hitColliders)
+        {
+            hitCollider.attachedRigidbody?.AddExplosionForce(300, hitPoint, 10, 0.05f);
+        }
+        Destroy(gameObject);
         Debug.Log("boom");
     }
 
-    public void Shoot(Vector3 dir)
+    public void Shoot()
     {
-        rb.AddForce(dir * speed);
+        rb.AddForce(transform.forward * arrowForce);
     }
+
 }
