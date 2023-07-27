@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8452718348402603013}
   - component: {fileID: 8452718348402603012}
+  - component: {fileID: 2079675872}
   m_Layer: 0
   m_Name: OnlineCharacterSelectionManager
   m_TagString: Untagged
@@ -47,7 +48,7 @@ MonoBehaviour:
   selectButton: {fileID: 0}
   NextCharacterButton: {fileID: 0}
   PreviousCharacterButton: {fileID: 0}
-  availableCharacters:
+  characters:
   - {fileID: 2060720341077089113, guid: 36a30c7147b980047a39fb5eed06b9d6, type: 3}
   - {fileID: 2060720341077089113, guid: 4ca53c906996dcf48a511b3f0c228548, type: 3}
   - {fileID: 2060720341077089113, guid: 275a5af494f760e4dbdb783712bbc2ae, type: 3}
@@ -56,3 +57,25 @@ MonoBehaviour:
   - {fileID: 2060720341077089113, guid: 1dacf6461ff9e864abbbee9edbda35c6, type: 3}
   ViewSpawnLocation: {fileID: 0}
   spawnOffset: 10
+--- !u!114 &2079675872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8452718348402603015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

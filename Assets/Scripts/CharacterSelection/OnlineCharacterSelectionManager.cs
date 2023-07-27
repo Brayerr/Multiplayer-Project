@@ -16,6 +16,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     [SerializeField] Button selectButton;
     [SerializeField] Button NextCharacterButton;
     [SerializeField] Button PreviousCharacterButton;
+    [SerializeField] Button readyButton;
     [Space]
 
     [Header("Characters")]
@@ -48,16 +49,11 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         LoadCharactersInScene();
     }
 
-    [ContextMenu("Print Player Custom Properties")]
-    public void PrintCustomProperties()
-    {
-        print(PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]);
-    }
 
     #region RPC
 
     [PunRPC]
-    public void LockInCharacter(PhotonMessageInfo photonMessageInfo)
+    public void LockInCharacter(int characterID, PhotonMessageInfo photonMessageInfo)
     {
         if(!PhotonNetwork.IsMasterClient)
         {
@@ -73,7 +69,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
             if (player.CustomProperties.ContainsKey(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY))
             {
                 //check if id = current character index
-                if ((int)player.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY] == currentCharacterIndex)
+                if ((int)player.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY] == characterID)
                 {
                     print("someone has this character already");
                     return;
@@ -81,28 +77,40 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
             }
         }
 
-        print("only i am locking in to character " + currentCharacterIndex);
+        print("player " + photonMessageInfo.Sender.ActorNumber + " locked in to character " + characterID);
         ExitGames.Client.Photon.Hashtable playerHashtable;
         playerHashtable = photonMessageInfo.Sender.CustomProperties;
-        playerHashtable.Add(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY, currentCharacterIndex);
+        playerHashtable.Add(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY, characterID);
         photonMessageInfo.Sender.SetCustomProperties(playerHashtable);
 
-        photonView.RPC(UPDATE_AVAILABLE_CHARACTERS_RPC, RpcTarget.AllViaServer);
+        photonView.RPC(UPDATE_AVAILABLE_CHARACTERS_RPC, RpcTarget.AllViaServer, characterID);
     }
 
     [PunRPC]
-    public void UpdateAvailableCharacters()
+    public void UpdateAvailableCharacters(int characterID)
     {
-        availableCharacterIDs.Remove(currentCharacterIndex);
-        selectedCharacterIDs.Add(currentCharacterIndex);
+        availableCharacterIDs.Remove(characterID);
+        selectedCharacterIDs.Add(characterID);
+    }
+
+    [PunRPC]
+    public void UpdateMasterReady()
+    {
+        //TODO send to master to update ready 
+
+        //player custom property ready bool
+        //send to master to set the property true
+        //master checks if all players still connected
+        //master checks if all players are ready true
+        //if all players are ready, master has button to start game
     }
 
     #endregion
 
     public void TryLockInCharacter()
     {
-        DisableButtons();
-        photonView.RPC(LOCK_IN_CHARACTER_RPC, RpcTarget.MasterClient);
+        DisableSelectionButtons();
+        photonView.RPC(LOCK_IN_CHARACTER_RPC, RpcTarget.MasterClient, currentCharacterIndex);
         //check if id is in customproperties
         StartCoroutine(CheckIfCustomPropertyUpdated(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY));
     }
@@ -118,6 +126,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         }
     }
 
+    
 
     /// <summary>
     /// Coroutine. checks every second for 3 seconds if the player custom properties updated with the requested key
@@ -130,6 +139,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         {
             if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY))
             {
+                EnableReadyButton();
                 print("your character is: " + currentCharacterIndex);
                 yield break;
             }
@@ -140,13 +150,15 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY))
         {
             print("your character is: " + currentCharacterIndex);
+            EnableReadyButton();
         }
         else
         {
-            EnableButtons();
+            EnableSelectionButtons();
             print("something fucked up along the way, try again");
         }
     }
+
 
     #region UI Button Controls
     void UpdateSelectButton()
@@ -163,10 +175,8 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
 
     public void MoveToNextCharacter()
     {
-        //set index ++
         currentCharacterIndex++;
-        //check if index ++ == null
-        //if null then disable next button
+
         CheckIfButtonsInteractable();
 
         Camera.main.transform.DOMoveX(spawnOffset * currentCharacterIndex, 0.5f).SetEase(Ease.OutSine);
@@ -174,10 +184,8 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
 
     public void MoveToPrevCharacter()
     {
-        //set index --
         currentCharacterIndex--;
-        //check if index -- == null
-        //if null then disable prev button
+
         CheckIfButtonsInteractable();
 
         Camera.main.transform.DOMoveX(spawnOffset * currentCharacterIndex, 0.5f).SetEase(Ease.OutSine);
@@ -214,16 +222,33 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         UpdateSelectButton();
     }
 
-    void DisableButtons()
+    void DisableSelectionButtons()
     {
         selectButton.interactable = false;
         NextCharacterButton.interactable = false;
         PreviousCharacterButton.interactable = false;
     }
 
-    void EnableButtons()
+    void EnableSelectionButtons()
     {
         CheckIfButtonsInteractable();
+    }
+
+    void EnableReadyButton()
+    {
+        selectButton.enabled = false;
+        readyButton.enabled = true;
+    }
+
+    #endregion
+
+
+    #region Debug
+
+    [ContextMenu("Print Player Custom Properties")]
+    public void PrintCustomProperties()
+    {
+        print(PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]);
     }
 
     #endregion
