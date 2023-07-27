@@ -101,6 +101,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
 
     public void TryLockInCharacter()
     {
+        DisableButtons();
         photonView.RPC(LOCK_IN_CHARACTER_RPC, RpcTarget.MasterClient);
         //check if id is in customproperties
         StartCoroutine(CheckIfCustomPropertyUpdated(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY));
@@ -142,6 +143,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         }
         else
         {
+            EnableButtons();
             print("something fucked up along the way, try again");
         }
     }
@@ -210,6 +212,18 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         }
 
         UpdateSelectButton();
+    }
+
+    void DisableButtons()
+    {
+        selectButton.interactable = false;
+        NextCharacterButton.interactable = false;
+        PreviousCharacterButton.interactable = false;
+    }
+
+    void EnableButtons()
+    {
+        CheckIfButtonsInteractable();
     }
 
     #endregion
