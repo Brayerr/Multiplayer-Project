@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -32,12 +33,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float shootCooldown;
     bool isCountingDown;
 
+    [Header("Animations")]
+    Animator anim;
+
+
     public Transform orientation;
 
     float horizontalInput;
     float verticalInput;
 
     Vector3 moveDirection;
+    Vector3 moveDirectionHolder = Vector3.zero;
 
     Rigidbody rb;
 
@@ -45,6 +51,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        anim = GetComponentInChildren<Animator>();
 
         readyToJump = true;
     }
@@ -83,11 +90,14 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
+        if (horizontalInput != 0 || verticalInput != 0) ToggleWalk(true);
+        else if (horizontalInput == 0 && verticalInput == 0) ToggleWalk(false);
+
         // when to jump
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
             readyToJump = false;
-
+            TriggerJump();
             Jump();
 
             Invoke(nameof(ResetJump), jumpCooldown);
@@ -95,7 +105,10 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(shootKey) && shootCooldown <= 0)
         {
-            ShootArrow();
+            TriggerShoot();
+            Invoke("ShootArrow", .5f);
+            shootCooldown = 1;
+            isCountingDown = true;
         }
     }
 
@@ -142,8 +155,25 @@ public class PlayerController : MonoBehaviour
     {
         MoveArrow shot = Instantiate(arrow, shootingPosition.position, Quaternion.identity);
         shot.transform.Rotate(orientation.transform.eulerAngles);
-        shootCooldown = 1;
-        isCountingDown = true;
+        
 
     }
+
+    #region Animations
+    void TriggerShoot()
+    {
+        anim.SetTrigger("Shoot");
+    }
+
+    void TriggerJump()
+    {
+        anim.SetTrigger("Jump");
+    }
+
+    void ToggleWalk(bool boolean)
+    {
+        if (boolean) anim.SetBool("isWalking", true);
+        else anim.SetBool("isWalking", false);
+    }
+    #endregion
 }
