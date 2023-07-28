@@ -1899,6 +1899,11 @@ PrefabInstance:
       objectReference: {fileID: 1605054412}
     - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
         type: 3}
+      propertyPath: startButton
+      value: 
+      objectReference: {fileID: 1335983180}
+    - target: {fileID: 8452718348402603012, guid: 20b9aadc55b7f694682e7eee83673fd5,
+        type: 3}
       propertyPath: selectButton
       value: 
       objectReference: {fileID: 1968363996}

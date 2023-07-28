@@ -277,14 +277,14 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     void EnableReadyButton()
     {
         print("ready button enabled");
-        selectButton.enabled = false;
-        readyButton.enabled = true;
+        selectButton.gameObject.SetActive(false);
+        readyButton.gameObject.SetActive(true);
     }
 
     void EnableStartButton()
     {
-        readyButton.enabled = false;
-        startButton.enabled = true;
+        readyButton.gameObject.SetActive(false);
+        startButton.gameObject.SetActive(true);
     }
 
     #endregion
