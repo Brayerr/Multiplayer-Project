@@ -70,6 +70,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     public const string LOAD_GAME_NAME = "JoinOrStartGame";
     public const string PING_HASHTABLE_NAME = "ping";
 
+    List<RoomInfo> roomInfos;
 
     private bool isMasterClient => PhotonNetwork.IsMasterClient;
 
@@ -217,13 +218,23 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         base.OnRoomListUpdate(roomList);
         UIRoomClear();
 
-        Debug.Log($"OnRoomListUpdate Override Called, there are {roomList.Count} rooms in the list");
+        Debug.Log($"OnRoomListUpdate Override Called, there are {roomInfos.Count} rooms in the list");
 
-        if (roomList.Count > 0 || PhotonNetwork.CountOfRooms > 0)
+        foreach (RoomInfo roomInfo in roomList)
+        {
+            if (roomInfo.RemovedFromList && roomInfos.Contains(roomInfo))
+            {
+                roomInfos.Remove(roomInfo);
+            }
+
+            else roomInfos.Add(roomInfo);
+        }
+
+        if (roomInfos.Count > 0)
         {
             defualtScrollPrompt.gameObject.SetActive(false);
             Debug.Log("Rooms Created");
-            foreach (var roominfo in roomList)
+            foreach (var roominfo in roomInfos)
             {
                 if (roominfo.IsVisible || roominfo.PlayerCount > 0)
                 {
