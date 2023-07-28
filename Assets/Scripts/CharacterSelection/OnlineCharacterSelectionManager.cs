@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Photon.Pun;
+using Photon.Pun.Demo.Cockpit.Forms;
 using Photon.Realtime;
 using System;
 using System.Collections;
@@ -11,6 +12,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
 {
     private const string LOCK_IN_CHARACTER_RPC = nameof(LockInCharacter);
     private const string UPDATE_AVAILABLE_CHARACTERS_RPC = nameof(UpdateAvailableCharacters);
+    private const string LOAD_GAME_LEVEL_RPC = nameof(LoadSceneRPC);
 
     [Header("Selection Buttons")]
     [SerializeField] Button selectButton;
@@ -105,7 +107,18 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         //if all players are ready, master has button to start game
     }
 
+    [PunRPC] 
+    public void LoadSceneRPC()
+    {
+        PhotonNetwork.LoadLevel(2);
+    }
+
     #endregion
+
+    public void StartAlonsGame()
+    {
+        photonView.RPC(LOAD_GAME_LEVEL_RPC, RpcTarget.AllBuffered);
+    }
 
     public void TryLockInCharacter()
     {
