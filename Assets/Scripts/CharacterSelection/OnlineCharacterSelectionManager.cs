@@ -134,7 +134,13 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
 
         //set room property everyone ready
         //for future use if master disconnects/changes and everyone ready
-        PhotonNetwork.CurrentRoom.CustomProperties.Add(Constants.ROOM_EVERYONE_READY_KEY, true);
+
+        ExitGames.Client.Photon.Hashtable roomHashtable;
+        roomHashtable = PhotonNetwork.CurrentRoom.CustomProperties;
+        roomHashtable.Add(Constants.ROOM_EVERYONE_READY_KEY, true);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(roomHashtable);
+
+
 
         print("Everyone should be ready");
         EnableStartButton();
@@ -152,7 +158,10 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     {
         readyButton.interactable = false;
 
-        PhotonNetwork.LocalPlayer.CustomProperties.Add(Constants.PLAYER_READY_PROPERTY_KEY, true);
+        ExitGames.Client.Photon.Hashtable playerHashtable;
+        playerHashtable = PhotonNetwork.LocalPlayer.CustomProperties;
+        playerHashtable.Add(Constants.PLAYER_READY_PROPERTY_KEY, true);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerHashtable);
 
         photonView.RPC(CHECK_IF_EVERYONE_READY, RpcTarget.MasterClient);
     }
