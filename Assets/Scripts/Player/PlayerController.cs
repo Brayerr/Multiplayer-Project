@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Photon.Pun;
 
 public class PlayerController : MonoBehaviour
 {
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         anim = GetComponentInChildren<Animator>();
