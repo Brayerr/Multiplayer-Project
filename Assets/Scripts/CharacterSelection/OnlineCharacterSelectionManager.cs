@@ -276,6 +276,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
 
     void EnableReadyButton()
     {
+        print("ready button enabled");
         selectButton.enabled = false;
         readyButton.enabled = true;
     }
