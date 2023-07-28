@@ -217,20 +217,21 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         base.OnRoomListUpdate(roomList);
         UIRoomClear();
 
-        Debug.Log("OnRoomListUpdate Override Called");
+        Debug.Log($"OnRoomListUpdate Override Called, there are {roomList.Count} rooms in the list");
 
-        if (PhotonNetwork.CountOfRooms > 0)
+        if (roomList.Count > 0 || PhotonNetwork.CountOfRooms > 0)
         {
             defualtScrollPrompt.gameObject.SetActive(false);
             Debug.Log("Rooms Created");
             foreach (var roominfo in roomList)
             {
-                if (roominfo.PlayerCount > 0)
+                if (roominfo.IsVisible || roominfo.PlayerCount > 0)
                 {
                     UIRoomInstantion(roominfo);
                 }
             }
         }
+
         else
         {
             defualtScrollPrompt.gameObject.SetActive(true);
