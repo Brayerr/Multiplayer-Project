@@ -6,12 +6,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class OnlineCharacterSelectionManager : MonoBehaviourPun
 {
     private const string LOCK_IN_CHARACTER_RPC = nameof(LockInCharacter);
     private const string UPDATE_AVAILABLE_CHARACTERS_RPC = nameof(UpdateAvailableCharacters);
+    private const string CHECK_IF_EVERYONE_READY = nameof(CheckIfEveryoneReady);
     private const string LOAD_GAME_LEVEL_RPC = nameof(LoadSceneRPC);
 
     [Header("Selection Buttons")]
@@ -19,6 +21,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     [SerializeField] Button NextCharacterButton;
     [SerializeField] Button PreviousCharacterButton;
     [SerializeField] Button readyButton;
+    [SerializeField] Button startButton;
     [Space]
 
     [Header("Characters")]
@@ -95,16 +98,52 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         selectedCharacterIDs.Add(characterID);
     }
 
-    [PunRPC]
-    public void UpdateMasterReady()
-    {
-        //TODO send to master to update ready 
 
-        //player custom property ready bool
-        //send to master to set the property true
-        //master checks if all players still connected
-        //master checks if all players are ready true
-        //if all players are ready, master has button to start game
+
+    [PunRPC]
+    public void CheckIfEveryoneReady()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            print("not master client tried updating ready");
+            return;
+        }
+
+        //get all players
+        Player[] players = PhotonNetwork.PlayerList;
+
+        //for each player in room
+        foreach (var player in players)
+        {
+            //if player has key ready
+            if (player.CustomProperties.ContainsKey(Constants.PLAYER_READY_PROPERTY_KEY))
+            {
+                //if ready == false
+                if ((bool)player.CustomProperties[Constants.PLAYER_READY_PROPERTY_KEY] == false)
+                {
+                    print($"{player.NickName} isnt ready");
+                    return;
+                }
+            }
+            else
+            {
+                print($"{player.NickName} isnt ready");
+                return;
+            }
+        }
+
+        //set room property everyone ready
+        //for future use if master disconnects/changes and everyone ready
+
+        ExitGames.Client.Photon.Hashtable roomHashtable;
+        roomHashtable = PhotonNetwork.CurrentRoom.CustomProperties;
+        roomHashtable.Add(Constants.ROOM_EVERYONE_READY_KEY, true);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(roomHashtable);
+
+
+
+        print("Everyone should be ready");
+        EnableStartButton();
     }
 
     [PunRPC] 
@@ -114,6 +153,18 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     }
 
     #endregion
+
+    public void UpdatePlayerReady()
+    {
+        readyButton.interactable = false;
+
+        ExitGames.Client.Photon.Hashtable playerHashtable;
+        playerHashtable = PhotonNetwork.LocalPlayer.CustomProperties;
+        playerHashtable.Add(Constants.PLAYER_READY_PROPERTY_KEY, true);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerHashtable);
+
+        photonView.RPC(CHECK_IF_EVERYONE_READY, RpcTarget.MasterClient);
+    }
 
     public void StartAlonsGame()
     {
@@ -125,7 +176,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         DisableSelectionButtons();
         photonView.RPC(LOCK_IN_CHARACTER_RPC, RpcTarget.MasterClient, currentCharacterIndex);
         //check if id is in customproperties
-        StartCoroutine(CheckIfCustomPropertyUpdated(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY));
+        StartCoroutine(CheckIfPlayerCustomPropertyUpdated(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY));
     }
 
     public void LoadCharactersInScene()
@@ -139,13 +190,11 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
         }
     }
 
-    
-
     /// <summary>
     /// Coroutine. checks every second for 3 seconds if the player custom properties updated with the requested key
     /// </summary>
     /// <returns></returns>
-    IEnumerator CheckIfCustomPropertyUpdated(string CUSTOM_PROPERTY_KEY)
+    IEnumerator CheckIfPlayerCustomPropertyUpdated(string CUSTOM_PROPERTY_KEY)
     {
         //every 1 seconds check if contains key
         for (int i = 0; i < 3; i++)
@@ -249,8 +298,15 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
 
     void EnableReadyButton()
     {
-        selectButton.enabled = false;
-        readyButton.enabled = true;
+        print("ready button enabled");
+        selectButton.gameObject.SetActive(false);
+        readyButton.gameObject.SetActive(true);
+    }
+
+    void EnableStartButton()
+    {
+        readyButton.gameObject.SetActive(false);
+        startButton.gameObject.SetActive(true);
     }
 
     #endregion
