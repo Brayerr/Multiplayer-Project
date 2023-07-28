@@ -70,7 +70,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     public const string LOAD_GAME_NAME = "JoinOrStartGame";
     public const string PING_HASHTABLE_NAME = "ping";
 
-    List<RoomInfo> roomInfos;
+    List<RoomInfo> roomInfos = new();
 
     private bool isMasterClient => PhotonNetwork.IsMasterClient;
 
