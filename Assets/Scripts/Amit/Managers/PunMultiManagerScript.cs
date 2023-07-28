@@ -70,7 +70,8 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     public const string LOAD_GAME_NAME = "JoinOrStartGame";
     public const string PING_HASHTABLE_NAME = "ping";
 
-    List<RoomInfo> roomInfos = new();
+    List<RoomInfo> cachedRoomInfos = new();
+    List<string> RoomNames = new();
 
     private bool isMasterClient => PhotonNetwork.IsMasterClient;
 
@@ -218,25 +219,49 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         base.OnRoomListUpdate(roomList);
         UIRoomClear();
 
-        Debug.Log($"OnRoomListUpdate Override Called, there are {roomInfos.Count} rooms in the list");
+        Debug.Log($"OnRoomListUpdate Override Called, there are {cachedRoomInfos.Count} rooms in the list");
 
         foreach (RoomInfo roomInfo in roomList)
         {
-            if (roomInfo.RemovedFromList && roomInfos.Contains(roomInfo))
+            // Remove and Add room if the name exists but something else has been changed
+            if (RoomNames.Contains(roomInfo.Name))
             {
-                roomInfos.Remove(roomInfo);
+                RoomInfo t = null;
+                RoomInfo a = null;
+                foreach(var room in cachedRoomInfos)
+                {
+                    if (room.Name == roomInfo.Name)
+                    {
+                        t = room;
+
+                        if (!roomInfo.RemovedFromList)
+                        {
+                            a = roomInfo;
+                        }
+                        
+                        RoomNames.Remove(roomInfo.Name);
+                    }
+                }
+                if (t != null) { cachedRoomInfos.Remove(t); }
+                if (a != null) { cachedRoomInfos.Add(a);}
             }
 
-            else roomInfos.Add(roomInfo);
+            // Add room info if no room has the name
+            if (!RoomNames.Contains(roomInfo.Name))
+            {
+                RoomNames.Add(roomInfo.Name);
+                cachedRoomInfos.Add(roomInfo);
+            }
         }
 
-        if (roomInfos.Count > 0)
+        if (cachedRoomInfos.Count > 0)
         {
             defualtScrollPrompt.gameObject.SetActive(false);
             Debug.Log("Rooms Created");
-            foreach (var roominfo in roomInfos)
+            foreach (var roominfo in cachedRoomInfos)
             {
-                if (roominfo.IsVisible || roominfo.PlayerCount > 0)
+
+                if (roominfo.PlayerCount > 0)
                 {
                     UIRoomInstantion(roominfo);
                 }
