@@ -20,7 +20,7 @@ public class PlayerCam : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        GameObject go = PhotonNetwork.Instantiate($"PlayerPrefab/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}",new Vector3(0, 3, -8),transform.rotation);
+        GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}",new Vector3(0, 3, -8),transform.rotation);
         if (go.TryGetComponent<PlayerController>(out PlayerController control))
         {
             orientation = control.orientation;
