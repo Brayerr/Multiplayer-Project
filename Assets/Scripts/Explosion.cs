@@ -19,7 +19,7 @@ public class Explosion : MonoBehaviourPun
         foreach (var hitCollider in hitColliders)
         {
             //hitCollider.attachedRigidbody?.AddExplosionForce(500, hitPoint, 5, 0.05f);
-            hitCollider.attachedRigidbody?.AddForce((hitPoint - hitCollider.transform.position) * -20, ForceMode.Impulse);
+            hitCollider.attachedRigidbody?.AddForce((hitPoint - hitCollider.transform.position).normalized * -20, ForceMode.Impulse);
             Debug.Log("boom");
         }
         Invoke("Destroye", 1f);
