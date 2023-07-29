@@ -559,6 +559,7 @@ MonoBehaviour:
   shootCooldown: 0
   orientation: {fileID: 2003298663356072888}
   cameraPos: {fileID: 2003298663462660339}
+  moveCam: {fileID: 1540986959845022454, guid: 9c08266289494f14e9da1760b42b36a6, type: 3}
 --- !u!136 &645151648
 CapsuleCollider:
   m_ObjectHideFlags: 0
