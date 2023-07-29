@@ -51,6 +51,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     Rigidbody rb;
 
+    public Transform cameraPos;
+    public MoveCamera moveCam;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -59,6 +62,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         readyToJump = true;
         currentHP = maxHP;
         random = new System.Random();
+        if (photonView.IsMine) moveCam.cameraPosition.position = cameraPos.position;
     }
 
     private void Update()
