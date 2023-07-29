@@ -9,4 +9,5 @@ public static class Constants
     public static string ROOM_EVERYONE_READY_KEY = "RoomEveryoneReady";
     public static string PLAYER_TAG = "Player";
     public static string ARROW_TAG = "Arrow";
+    public static string END_GAME_RPC = "EndGameRPC";
 }

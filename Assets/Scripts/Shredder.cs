@@ -23,6 +23,7 @@ public class Shredder : MonoBehaviour
 
             else
             {
+                pc.KillPlayer();
                 print("player died");
             }
 

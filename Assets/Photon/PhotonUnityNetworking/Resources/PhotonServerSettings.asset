@@ -49,6 +49,7 @@ MonoBehaviour:
   - CheckIfEveryoneReady
   - LoadSceneRPC
   - ArrowExplosion
+  - EndGameRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviourPun
 {
@@ -21,12 +22,16 @@ public class GameManager : MonoBehaviourPun
 
     public void EndGameLoop()
     {
-        if(PhotonNetwork.IsMasterClient) photonView.RPC("EndGameRPC", RpcTarget.AllViaServer);
+        if(PhotonNetwork.IsMasterClient) photonView.RPC(Constants.END_GAME_RPC, RpcTarget.AllViaServer);
     }
+
 
     [PunRPC]
     public void EndGameRPC()
     {
-        
+        print("restarting");
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SceneManager.LoadScene(0);
     }
 }

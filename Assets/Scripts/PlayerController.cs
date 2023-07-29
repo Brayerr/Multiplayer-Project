@@ -189,6 +189,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (GameManager.activePlayers.Contains(this)) GameManager.activePlayers.Remove(this);
         if (GameManager.activePlayers.Count <= 1)
         {
+            print("last man standing");
             LastManStanding.Invoke();
         }
     }
