@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Explosion : MonoBehaviourPun
 {
@@ -13,13 +14,19 @@ public class Explosion : MonoBehaviourPun
 
     void Explode(Vector3 hitPoint)
     {
+        Grow();
         Collider[] hitColliders = Physics.OverlapSphere(hitPoint, 5);
         foreach (var hitCollider in hitColliders)
         {
-            hitCollider.attachedRigidbody?.AddExplosionForce(300, hitPoint, 10, 0.05f);
+            hitCollider.attachedRigidbody?.AddExplosionForce(500, hitPoint, 5, 0.05f);
             Debug.Log("boom");
         }
-        Invoke("Destroye", .5f);
+        Invoke("Destroye", 1f);
+    }
+
+    void Grow()
+    {
+        transform.DOScale(5, 1);
     }
 
     void Destroye()
