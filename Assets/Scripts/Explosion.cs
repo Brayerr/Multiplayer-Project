@@ -18,7 +18,8 @@ public class Explosion : MonoBehaviourPun
         Collider[] hitColliders = Physics.OverlapSphere(hitPoint, 5);
         foreach (var hitCollider in hitColliders)
         {
-            hitCollider.attachedRigidbody?.AddExplosionForce(500, hitPoint, 5, 0.05f);
+            //hitCollider.attachedRigidbody?.AddExplosionForce(500, hitPoint, 5, 0.05f);
+            hitCollider.attachedRigidbody?.AddForce((hitPoint - hitCollider.transform.position) * -300);
             Debug.Log("boom");
         }
         Invoke("Destroye", 1f);
@@ -26,7 +27,11 @@ public class Explosion : MonoBehaviourPun
 
     void Grow()
     {
-        transform.DOScale(5, 1);
+        Tween tween = transform.DOScale(5, 1);
+        tween.OnComplete(() =>
+        {
+            tween.Kill();
+        });
     }
 
     void Destroye()
