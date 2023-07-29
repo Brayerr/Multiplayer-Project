@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using ExitGames.Client.Photon.StructWrapping;
 using Unity.VisualScripting;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 {
@@ -65,10 +66,10 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 
     [Header("Player")]
     [SerializeField] private GameObject PlayerPrefab;
-    const string PLAYER_PREFAB_NAME = "PlayerCapsule";
-    private const string SCORE_KEY_NAME = "Score";
-    public const string LOAD_GAME_NAME = "JoinOrStartGame";
-    public const string PING_HASHTABLE_NAME = "ping";
+    //const string PLAYER_PREFAB_NAME = "PlayerCapsule";
+    //private const string SCORE_KEY_NAME = "Score";
+    //public const string LOAD_GAME_NAME = "JoinOrStartGame";
+    //public const string PING_HASHTABLE_NAME = "ping";
 
     List<RoomInfo> cachedRoomInfos = new();
     List<string> RoomNames = new();
@@ -173,7 +174,15 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
             PhotonNetwork.EnableCloseConnection = true;
             PhotonNetwork.JoinLobby();
             PlayerCustomPropPing();
+            
         }
+    }
+
+    private void SetUsersUniqueID()
+    {
+        Hashtable hashtable = new Hashtable();
+        hashtable.Add(Constants.USER_UNIQUE_ID, SystemInfo.deviceUniqueIdentifier);
+        PhotonNetwork.SetPlayerCustomProperties(hashtable);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -538,20 +547,20 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     {
         if (isMasterClient)
         {
-            photonView.RPC(LOAD_GAME_NAME, RpcTarget.AllBuffered);
+            photonView.RPC(Constants.LOAD_GAME_NAME, RpcTarget.AllBuffered);
         }
     }
 
     private static void PlayerCustomPropPing()
     {
-        ExitGames.Client.Photon.Hashtable pingHashtable = new();
-        pingHashtable.Add(PING_HASHTABLE_NAME, PhotonNetwork.GetPing());
+        Hashtable pingHashtable = new();
+        pingHashtable.Add(Constants.PING_HASHTABLE_NAME, PhotonNetwork.GetPing());
         PhotonNetwork.SetPlayerCustomProperties(pingHashtable);
     }
 
     public static string ExtractPlayerPing(Player player)
     {
-        int playerPing = (int)player.CustomProperties[PING_HASHTABLE_NAME];
+        int playerPing = (int)player.CustomProperties[Constants.PING_HASHTABLE_NAME];
         if (playerPing > -1)
         {
             return playerPing.ToString() + " ms";

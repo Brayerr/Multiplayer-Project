@@ -211,4 +211,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
         else anim.SetBool("isWalking", false);
     }
     #endregion
+
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (info.photonView.IsMine)
+            OnlineGameManager.Instance.SetPlayerController(this);
+        OnlineGameManager.Instance.AddPlayerController(this);
+    }
 }
