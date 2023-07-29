@@ -8,7 +8,6 @@ public class MoveArrow : MonoBehaviourPun
 {
     float arrowForce = 2000;
     [SerializeField] Rigidbody rb;
-    [SerializeField] GameObject arrowHead;
 
     private void Start()
     {
@@ -17,11 +16,14 @@ public class MoveArrow : MonoBehaviourPun
 
     private void OnCollisionEnter(Collision collision)
     {
-        Vector3 hitPoint = collision.GetContact(0).point;
-        photonView.RPC("ArrowExplosion", RpcTarget.MasterClient, hitPoint);
-        //Explode(hitPoint);
-        Debug.Log("hit");
-
+        //master
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Vector3 hitPoint = collision.GetContact(0).point;
+            PhotonNetwork.Instantiate("Explosion", hitPoint, Quaternion.identity);
+            //Explode(hitPoint);
+            Debug.Log("hit");
+        }
     }
 
     void Explode(Vector3 hitPoint)
@@ -40,11 +42,5 @@ public class MoveArrow : MonoBehaviourPun
         rb.AddForce(transform.forward * arrowForce);
     }
 
-    #region RPC
-    [PunRPC]
-    public void ArrowExplosion(Vector3 hitPoint)
-    {
-        
-    }
-    #endregion
+
 }
