@@ -7,12 +7,12 @@ public class Shredder : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Arrow"))
+        if (other.CompareTag(Constants.ARROW_TAG))
         {
             Destroy(other.gameObject);
         }
 
-        else if (other.CompareTag("Player"))
+        else if (other.CompareTag(Constants.PLAYER_TAG))
         {
             var pc = other.GetComponent<PlayerController>();
             if (pc.currentHP > 0)

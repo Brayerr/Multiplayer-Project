@@ -24,6 +24,7 @@ public class PlayerCam : MonoBehaviour
         if (go.TryGetComponent<PlayerController>(out PlayerController control))
         {
             orientation = control.orientation;
+            if(PhotonNetwork.IsMasterClient) GameManager.activePlayers.Add(control);
         }
     }
 

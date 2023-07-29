@@ -6,6 +6,8 @@ using Photon.Pun;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
+    public static event Action LastManStanding;
+
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
@@ -180,6 +182,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         rb.velocity = Vector3.zero;
         transform.position = new Vector3(random.Next(0, 5), random.Next(0, 5), 1);
+    }
+
+    public void KillPlayer()
+    {
+        if (GameManager.activePlayers.Contains(this)) GameManager.activePlayers.Remove(this);
+        if (GameManager.activePlayers.Count <= 1)
+        {
+            LastManStanding.Invoke();
+        }
     }
 
     #region Animations
