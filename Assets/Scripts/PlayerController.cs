@@ -5,15 +5,18 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Attributes")]
+    [SerializeField] int maxHP = 3;
+    [SerializeField] public int currentHP;
+
     [Header("Movement")]
     public float moveSpeed;
-
     public float groundDrag;
-
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
+    System.Random random;
 
     [HideInInspector] public float walkSpeed;
     [HideInInspector] public float sprintSpeed;
@@ -52,8 +55,9 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         anim = GetComponentInChildren<Animator>();
-
         readyToJump = true;
+        currentHP = maxHP;
+        random = new System.Random();
     }
 
     private void Update()
@@ -155,8 +159,17 @@ public class PlayerController : MonoBehaviour
     {
         MoveArrow shot = Instantiate(arrow, shootingPosition.position, Quaternion.identity);
         shot.transform.Rotate(orientation.transform.eulerAngles);
-        
+    }
 
+    public void TakeDamage()
+    {
+        currentHP--;
+    }
+
+    public void Respawn()
+    {
+        rb.velocity = Vector3.zero;
+        transform.position = new Vector3(random.Next(0, 5), random.Next(0, 5), 1);
     }
 
     #region Animations

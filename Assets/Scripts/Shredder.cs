@@ -11,5 +11,21 @@ public class Shredder : MonoBehaviour
         {
             Destroy(other.gameObject);
         }
+
+        else if (other.CompareTag("Player"))
+        {
+            var pc = other.GetComponent<PlayerController>();
+            if (pc.currentHP > 0)
+            {
+                pc.TakeDamage();
+                pc.Respawn();
+            }
+
+            else
+            {
+                print("player died");
+            }
+
+        }
     }
 }
