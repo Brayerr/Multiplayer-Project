@@ -70,6 +70,8 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     public const string LOAD_GAME_NAME = "JoinOrStartGame";
     public const string PING_HASHTABLE_NAME = "ping";
 
+    List<RoomInfo> cachedRoomInfos = new();
+    List<string> RoomNames = new();
 
     private bool isMasterClient => PhotonNetwork.IsMasterClient;
 
@@ -217,20 +219,55 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         base.OnRoomListUpdate(roomList);
         UIRoomClear();
 
-        Debug.Log("OnRoomListUpdate Override Called");
+        Debug.Log($"OnRoomListUpdate Override Called, there are {cachedRoomInfos.Count} rooms in the list");
 
-        if (PhotonNetwork.CountOfRooms > 0)
+        foreach (RoomInfo roomInfo in roomList)
+        {
+            // Remove and Add room if the name exists but something else has been changed
+            if (RoomNames.Contains(roomInfo.Name))
+            {
+                RoomInfo t = null;
+                RoomInfo a = null;
+                foreach(var room in cachedRoomInfos)
+                {
+                    if (room.Name == roomInfo.Name)
+                    {
+                        t = room;
+
+                        if (!roomInfo.RemovedFromList)
+                        {
+                            a = roomInfo;
+                        }
+                        
+                        RoomNames.Remove(roomInfo.Name);
+                    }
+                }
+                if (t != null) { cachedRoomInfos.Remove(t); }
+                if (a != null) { cachedRoomInfos.Add(a);}
+            }
+
+            // Add room info if no room has the name
+            if (!RoomNames.Contains(roomInfo.Name))
+            {
+                RoomNames.Add(roomInfo.Name);
+                cachedRoomInfos.Add(roomInfo);
+            }
+        }
+
+        if (cachedRoomInfos.Count > 0)
         {
             defualtScrollPrompt.gameObject.SetActive(false);
             Debug.Log("Rooms Created");
-            foreach (var roominfo in roomList)
+            foreach (var roominfo in cachedRoomInfos)
             {
+
                 if (roominfo.PlayerCount > 0)
                 {
                     UIRoomInstantion(roominfo);
                 }
             }
         }
+
         else
         {
             defualtScrollPrompt.gameObject.SetActive(true);

@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Photon.Pun;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks
 {
     [Header("Movement")]
     public float moveSpeed;
@@ -85,30 +86,35 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
     }
 
+    public Transform GetOrientation() => orientation;
+
     private void MyInput()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-        if (horizontalInput != 0 || verticalInput != 0) ToggleWalk(true);
-        else if (horizontalInput == 0 && verticalInput == 0) ToggleWalk(false);
-
-        // when to jump
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (photonView.IsMine)
         {
-            readyToJump = false;
-            TriggerJump();
-            Jump();
+            horizontalInput = Input.GetAxisRaw("Horizontal");
+            verticalInput = Input.GetAxisRaw("Vertical");
 
-            Invoke(nameof(ResetJump), jumpCooldown);
-        }
+            if (horizontalInput != 0 || verticalInput != 0) ToggleWalk(true);
+            else if (horizontalInput == 0 && verticalInput == 0) ToggleWalk(false);
 
-        if (Input.GetKeyDown(shootKey) && shootCooldown <= 0)
-        {
-            TriggerShoot();
-            Invoke("ShootArrow", .5f);
-            shootCooldown = 1;
-            isCountingDown = true;
+            // when to jump
+            if (Input.GetKey(jumpKey) && readyToJump && grounded)
+            {
+                readyToJump = false;
+                TriggerJump();
+                Jump();
+
+                Invoke(nameof(ResetJump), jumpCooldown);
+            }
+
+            if (Input.GetKeyDown(shootKey) && shootCooldown <= 0)
+            {
+                TriggerShoot();
+                Invoke("ShootArrow", .5f);
+                shootCooldown = 1;
+                isCountingDown = true;
+            }
         }
     }
 
