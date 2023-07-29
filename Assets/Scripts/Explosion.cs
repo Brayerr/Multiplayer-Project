@@ -19,6 +19,11 @@ public class Explosion : MonoBehaviourPun
             hitCollider.attachedRigidbody?.AddExplosionForce(300, hitPoint, 10, 0.05f);
             Debug.Log("boom");
         }
+        Invoke("Destroye", .5f);
+    }
+
+    void Destroye()
+    {
         Destroy(gameObject);
     }
 }
