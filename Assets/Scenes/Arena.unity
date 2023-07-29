@@ -357,6 +357,7 @@ GameObject:
   - component: {fileID: 1615235441}
   - component: {fileID: 1615235440}
   - component: {fileID: 1615235439}
+  - component: {fileID: 1615235442}
   m_Layer: 0
   m_Name: DeathZone
   m_TagString: Untagged
@@ -442,6 +443,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1615235437}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1615235442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615235437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 642b378d5eb5fec47bbefc7a77f44835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1698303948
 GameObject:
   m_ObjectHideFlags: 0

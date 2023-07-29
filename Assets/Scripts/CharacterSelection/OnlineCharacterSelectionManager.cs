@@ -96,6 +96,7 @@ public class OnlineCharacterSelectionManager : MonoBehaviourPun
     {
         availableCharacterIDs.Remove(characterID);
         selectedCharacterIDs.Add(characterID);
+        UpdateSelectButton();
     }
 
 
