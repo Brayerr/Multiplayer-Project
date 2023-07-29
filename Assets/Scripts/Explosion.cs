@@ -8,7 +8,8 @@ public class Explosion : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
-        if(PhotonNetwork.IsMasterClient) Explode(transform.position);
+        //if(PhotonNetwork.IsMasterClient) 
+            Explode(transform.position);
     }
 
     void Explode(Vector3 hitPoint)
