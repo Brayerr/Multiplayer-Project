@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Photon.Pun;
 
-public class MoveArrow : MonoBehaviour
+public class MoveArrow : MonoBehaviourPun
 {
     float arrowForce = 2000;
     [SerializeField] Rigidbody rb;
@@ -17,7 +18,8 @@ public class MoveArrow : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Vector3 hitPoint = collision.GetContact(0).point;
-        Explode(hitPoint);
+        photonView.RPC("ArrowExplosion", RpcTarget.MasterClient, hitPoint);
+        //Explode(hitPoint);
         Debug.Log("hit");
 
     }
@@ -38,4 +40,11 @@ public class MoveArrow : MonoBehaviour
         rb.AddForce(transform.forward * arrowForce);
     }
 
+    #region RPC
+    [PunRPC]
+    public void ArrowExplosion(Vector3 hitPoint)
+    {
+        
+    }
+    #endregion
 }

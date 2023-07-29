@@ -554,6 +554,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 874379289399165736, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2003298663039400177, guid: 5def8f29eaf19d4448d99612a44d637e,
         type: 3}
       propertyPath: arrow
@@ -645,6 +650,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 7930663992711665379, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 645151652, guid: 5def8f29eaf19d4448d99612a44d637e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5def8f29eaf19d4448d99612a44d637e, type: 3}
@@ -698,6 +708,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 874379289399165736, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2003298663039400177, guid: 5def8f29eaf19d4448d99612a44d637e,
         type: 3}
       propertyPath: arrow
@@ -789,6 +804,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 7930663992711665379, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 645151652, guid: 5def8f29eaf19d4448d99612a44d637e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5def8f29eaf19d4448d99612a44d637e, type: 3}
@@ -799,6 +819,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 874379289399165736, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2003298663039400177, guid: 5def8f29eaf19d4448d99612a44d637e,
         type: 3}
       propertyPath: arrow
@@ -889,6 +914,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7930663992711665379, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 645151652, guid: 5def8f29eaf19d4448d99612a44d637e, type: 3}
@@ -1134,6 +1164,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 874379289399165736, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2003298663039400177, guid: 5def8f29eaf19d4448d99612a44d637e,
         type: 3}
       propertyPath: arrow
@@ -1224,6 +1259,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7930663992711665379, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 645151652, guid: 5def8f29eaf19d4448d99612a44d637e, type: 3}
@@ -1635,7 +1675,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 645151652, guid: 5def8f29eaf19d4448d99612a44d637e, type: 3}
+    - target: {fileID: 874379289399165736, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003298663039400177, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
@@ -1699,8 +1745,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 645151652, guid: 5def8f29eaf19d4448d99612a44d637e, type: 3}
+    - target: {fileID: 7930663992711665379, guid: 5def8f29eaf19d4448d99612a44d637e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5def8f29eaf19d4448d99612a44d637e, type: 3}
 --- !u!1001 &4405675510699263789
 PrefabInstance:

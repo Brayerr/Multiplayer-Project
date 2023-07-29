@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if (photonView.IsMine) MovePlayer();
     }
 
     public Transform GetOrientation() => orientation;
@@ -163,7 +163,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void ShootArrow()
     {
-        MoveArrow shot = Instantiate(arrow, shootingPosition.position, Quaternion.identity);
+        var shot = PhotonNetwork.Instantiate("Arrow", shootingPosition.position, Quaternion.identity);
         shot.transform.Rotate(orientation.transform.eulerAngles);
     }
 
