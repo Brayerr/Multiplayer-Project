@@ -8,8 +8,7 @@ public class Explosion : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
-        //if(PhotonNetwork.IsMasterClient) 
-            Explode(transform.position);
+        Explode(transform.position);
     }
 
     void Explode(Vector3 hitPoint)
@@ -18,8 +17,8 @@ public class Explosion : MonoBehaviourPun
         foreach (var hitCollider in hitColliders)
         {
             hitCollider.attachedRigidbody?.AddExplosionForce(300, hitPoint, 10, 0.05f);
+            Debug.Log("boom");
         }
         Destroy(gameObject);
-        Debug.Log("boom");
     }
 }

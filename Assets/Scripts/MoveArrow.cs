@@ -21,6 +21,7 @@ public class MoveArrow : MonoBehaviourPun
         {
             Vector3 hitPoint = collision.GetContact(0).point;
             PhotonNetwork.Instantiate("Explosion", hitPoint, Quaternion.identity);
+            Destroy(gameObject);
             //Explode(hitPoint);
             Debug.Log("hit");
         }
