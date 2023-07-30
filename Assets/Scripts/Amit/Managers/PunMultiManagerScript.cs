@@ -133,7 +133,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     {
         byte roomMax = (byte)int.Parse(maxPlayerSlider.value.ToString());
         int emptyRoomTtl = int.Parse(timeToDisconnectSlider.value.ToString());
-        PhotonNetwork.CreateRoom(chooseRoomInputField.text, new RoomOptions() { MaxPlayers = roomMax, EmptyRoomTtl = emptyRoomTtl }, null);
+        PhotonNetwork.CreateRoom(chooseRoomInputField.text, new RoomOptions() { MaxPlayers = roomMax, PlayerTtl = 30000,  EmptyRoomTtl = emptyRoomTtl, CleanupCacheOnLeave = false }, null);
         createRoomButton.interactable = false;
     }
 
@@ -183,12 +183,12 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         base.OnConnectedToMaster();
         if (masterStatus != null)
         {
+            SetUsersUniqueID();
             masterStatus.color = Color.green;
             masterStatus.text = "Connected to Master";
             PhotonNetwork.EnableCloseConnection = true;
             PhotonNetwork.JoinLobby();
             PlayerCustomPropPing();
-            SetUsersUniqueID();
         }
     }
 

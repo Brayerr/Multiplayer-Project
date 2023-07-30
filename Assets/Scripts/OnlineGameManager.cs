@@ -33,7 +33,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    
 
     #region RPC
 
