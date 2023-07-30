@@ -16,7 +16,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private const string SET_PLAYER_CONTROLLER = nameof(SetPlayerController);
     private const string INITIALIZE_PLAYER = nameof(InitializePlayer);
     private const string SPAWN_PLAYER = nameof(SpawnPlayer);
-//    private const string ASK_FOR_SPAWN = nameof(AskForSpawnPoint);
+    private const string UPDATE_SPAWN_POINTS = nameof(UpdateSpawnPoints);
 
     [SerializeField] private List<int> activePlayers = new List<int>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
@@ -25,6 +25,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private PlayerCam localPlayerCam;
 
     [SerializeField] SpawnPoint[] spawnPoints;
+    int playersInitialized = 0;
 
     private void Awake()
     {
@@ -120,6 +121,14 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             spawnPoints[rnd].isTaken = true;
             photonView.RPC(SPAWN_PLAYER, info.Sender, rnd);
         }
+        playersInitialized++;
+        if (playersInitialized >= PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            photonView.RPC("TestSpawnPoints", RpcTarget.All);
+            //ShareSpawnPoints();
+            //photonView.RPC("TestSpawnPoints", RpcTarget.All);
+        }
+
     }
 
     //[PunRPC]
@@ -200,6 +209,26 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         SceneManager.LoadScene(0);
     }
 
+    [PunRPC]
+    public void UpdateSpawnPoints(string data)
+    {
+        SpawnPoint[] spawnData = JsonUtility.FromJson<SpawnPoint[]>(data);
+        spawnPoints = spawnData;
+        foreach (SpawnPoint spawnPoint in spawnPoints)
+        {
+            print(spawnPoint.isTaken);
+        }
+    }
+
+    [PunRPC]
+    public void TestSpawnPoints()
+    {
+        foreach (SpawnPoint spawnPoint in spawnPoints)
+        {
+            print(spawnPoint.isTaken);
+        }
+    }
+
     #endregion
 
     public void SetPlayerController(PlayerController newLocalController)
@@ -251,5 +280,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         {
             spawnPoints[i].AssignID(i);
         }
+    }
+
+    void ShareSpawnPoints()
+    {
+        string spawnData = JsonUtility.ToJson(spawnPoints);
+        photonView.RPC(UPDATE_SPAWN_POINTS, RpcTarget.All, spawnData);
     }
 }
