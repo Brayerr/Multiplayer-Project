@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerCam : MonoBehaviourPun
 {
-    [SerializeField] PlayerController control;
     [SerializeField] float sensX;
     [SerializeField] float sensY;
 
@@ -22,6 +21,10 @@ public class PlayerCam : MonoBehaviourPun
 
     private void Update()
     {
+        if(orientation == null)
+        {
+            return;
+        }
         transform.position = orientation.position;
 
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
@@ -39,6 +42,7 @@ public class PlayerCam : MonoBehaviourPun
 
     public void SetOrientation(Transform orientation)
     {
+        print("called set orientation");
         this.orientation = orientation;
     }
 }

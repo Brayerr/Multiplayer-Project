@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using Photon.Realtime;
 using UnityEngine;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 using Random = UnityEngine.Random;
-
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
 {
@@ -13,9 +14,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
 
     private const string SET_PLAYER_CONTROLLER = nameof(SetPlayerController);
+    private const string INITIALIZE_PLAYER = nameof(InitializePlayer);
     private const string SPAWN_PLAYER = nameof(SpawnPlayer);
     private const string ASK_FOR_SPAWN = nameof(AskForSpawnPoint);
 
+    [SerializeField] private List<int> activePlayers = new List<int>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
 
     private PlayerController localPlayerController;
@@ -30,15 +33,30 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+
+        PlayerController.PlayerDied += AskToRemovePlayer;
+
+        PlayerController pc;
+
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            //ask master to initialize player
-            //after initialize, either spawn player or give old player back
-            //if spawn player then choose spawn location
+            photonView.RPC(INITIALIZE_PLAYER, RpcTarget.MasterClient);
+
+
+            
+
+            //go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
+
+
+            //localPlayerCam.SetOrientation(localPlayerController.orientation);
+            //localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
+            //photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+        }
+        else
+        {
+            print("lol");
         }
     }
-
-
 
     #region RPC
 
@@ -51,7 +69,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        base.OnPlayerEnteredRoom(newPlayer);
+        //base.OnPlayerEnteredRoom(newPlayer);
 
         bool isReturningPlayer = false;
         Player oldPlayer = null;
@@ -79,20 +97,22 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         {
             foreach (PhotonView photonView in PhotonNetwork.PhotonViewCollection)
             {
+                print($"checking view: {photonView}");
                 if (photonView.Owner.ActorNumber == oldPlayer.ActorNumber)
                 {
+                    print($"transfered view: {photonView} to new player");
                     photonView.TransferOwnership(newPlayer);
+                    //transfer all properties?
                 }
             }
-
+            newPlayer.SetCustomProperties(oldPlayer.CustomProperties);
             photonView.RPC(SET_PLAYER_CONTROLLER, newPlayer);
-
         }
         else
         {
             newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
+            photonView.RPC(ASK_FOR_SPAWN, RpcTarget.MasterClient);
         }
-        photonView.RPC(ASK_FOR_SPAWN, RpcTarget.MasterClient);
     }
 
     [PunRPC]
@@ -115,6 +135,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             transform.rotation).GetComponent<PlayerController>();
 
         localPlayerCam.SetOrientation(localPlayerController.orientation);
+        localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
+        photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
     [PunRPC]
@@ -128,10 +150,12 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         foreach (PlayerController playerController in playerControllers)
         {
-            if (playerController.photonView.Controller.ActorNumber
+            if (playerController.photonView.Owner.ActorNumber
                 == PhotonNetwork.LocalPlayer.ActorNumber)
             {
+                print("set controller of returning player");
                 localPlayerController = playerController;
+                localPlayerCam.SetOrientation(localPlayerController.orientation);
                 break;
             }
         }
@@ -153,6 +177,66 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void AddPlayerController(PlayerController playerController)
     {
         playerControllers.Add(playerController);
+    }
+
+    public void AskToRemovePlayer()
+    {
+        if (photonView.IsMine)
+        {
+            photonView.RPC("RemovePlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+            print("activating remove RPC");
+        }
+    }
+
+    [PunRPC]
+    public void AddPlayer(int actorNum , PhotonMessageInfo info)
+    {
+        Debug.Log($"{nameof(AddPlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
+        if (PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
+        print($"{info.Sender.ActorNumber} joined the list ");
+    }
+
+    [PunRPC]
+    public void RemovePlayer(int actorNum, PhotonMessageInfo info)
+    {
+        Debug.Log($"{nameof(RemovePlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            activePlayers.Remove(info.Sender.ActorNumber);
+            print($"removed player {info.Sender.ActorNumber}");
+            if (activePlayers.Count <= 1) EndGameLoop();
+        }
+    }
+
+    public void EndGameLoop()
+    {
+        if (PhotonNetwork.IsMasterClient) photonView.RPC(Constants.END_GAME_RPC, RpcTarget.AllViaServer);
+    }
+
+
+    [PunRPC]
+    public void EndGameRPC()
+    {
+        print("restarting");
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        // Exit the room
+        PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene(0);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        if(otherPlayer.IsInactive)
+        {
+            //player can still return
+        }
+        else
+        {
+            //player ded
+        }
     }
 
     void InitializeSpawnPoints()

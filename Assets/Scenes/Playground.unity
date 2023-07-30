@@ -2202,6 +2202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d6c4c5ef233c814b87d163902e161e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activePlayers: 
 --- !u!4 &1620625592
 Transform:
   m_ObjectHideFlags: 0
