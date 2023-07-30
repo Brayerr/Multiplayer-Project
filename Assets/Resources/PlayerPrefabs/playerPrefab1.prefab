@@ -657,6 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectText: {fileID: 7253657411506741596}
+  Fix: {x: 0, y: 0, z: 0}
 --- !u!1 &2003298663039400181
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,8 +747,6 @@ MonoBehaviour:
   shootingPosition: {fileID: 2108474353}
   shootCooldown: 0
   orientation: {fileID: 2003298663356072888}
-  cameraPos: {fileID: 0}
-  moveCam: {fileID: 0}
 --- !u!136 &645151648
 CapsuleCollider:
   m_ObjectHideFlags: 0
