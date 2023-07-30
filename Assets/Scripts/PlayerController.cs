@@ -6,11 +6,10 @@ using Photon.Pun;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
-    public static event Action LastManStanding;
-
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
+    [SerializeField] public int ID;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -186,12 +185,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void KillPlayer()
     {
-        if (GameManager.activePlayers.Contains(this)) GameManager.activePlayers.Remove(this);
-        if (GameManager.activePlayers.Count <= 1)
-        {
-            print("last man standing");
-            LastManStanding.Invoke();
-        }
+        photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
+        print($"removed player {ID} from game");
     }
 
     #region Animations

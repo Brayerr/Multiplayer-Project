@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class PlayerCam : MonoBehaviour
+public class PlayerCam : MonoBehaviourPun
 {
-    [SerializeField] GameObject playerPrefab;
-
-    [SerializeField]float sensX;
-    [SerializeField]float sensY;
+    [SerializeField] PlayerController control;
+    [SerializeField] float sensX;
+    [SerializeField] float sensY;
 
     [SerializeField] Transform orientation;
 
@@ -20,12 +19,23 @@ public class PlayerCam : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}",new Vector3(0, 3, -8),transform.rotation);
+        GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
         if (go.TryGetComponent<PlayerController>(out PlayerController control))
         {
             orientation = control.orientation;
-            if(PhotonNetwork.IsMasterClient) GameManager.activePlayers.Add(control);
+
+            if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY))
+            {
+                control.ID = (int)PhotonNetwork.LocalPlayer.CustomProperties.GetValueOrDefault(Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY);
+                print(control.ID);
+                if (control.ID == null) print("ID is null"); 
+                photonView.RPC("AddPlayer", RpcTarget.MasterClient, control.ID);
+            }
+
+            else print("failed setting ID");
+            return;
         }
+        print("didnt find controller");
     }
 
     private void Update()

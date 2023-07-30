@@ -51,6 +51,9 @@ MonoBehaviour:
   - InitializePlayer
   - SetPlayerController
   - EndGameRPC
+  - PlayerDiedRPC
+  - RemovePlayer
+  - AddPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
