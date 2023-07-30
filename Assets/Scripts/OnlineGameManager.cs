@@ -15,7 +15,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private List<int> activePlayers = new List<int>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
-    
+
     private PlayerController localPlayerController;
     private PlayerCam localPlayerCam;
 
@@ -26,11 +26,15 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        PlayerController.PlayerDied += AskToRemovePlayer;
-        if(PhotonNetwork.IsConnectedAndReady)
+        if (photonView.IsMine)
+        {
+            PlayerController.PlayerDied += AskToRemovePlayer;
+        }
+
+        if (PhotonNetwork.IsConnectedAndReady)
         {
             GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
-            
+
             localPlayerCam.SetOrientation(localPlayerController.orientation);
             photonView.RPC("AddPlayer", RpcTarget.MasterClient);
         }
@@ -38,7 +42,10 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private void OnDestroy()
     {
-        PlayerController.PlayerDied -= AskToRemovePlayer;
+        if (photonView.IsMine)
+        {
+            PlayerController.PlayerDied -= AskToRemovePlayer;
+        }
     }
 
     #region RPC
@@ -47,7 +54,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     void InitializePlayer(PhotonMessageInfo info)
     {
         Player newPlayer = info.Sender;
-        if(!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient)
         {
             return;
         }
@@ -75,7 +82,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
 
         print($"player {newPlayer.NickName} has joined, isReturningPlayer: {isReturningPlayer}");
-        
+
         if (isReturningPlayer)
         {
             foreach (PhotonView photonView in PhotonNetwork.PhotonViewCollection)
@@ -135,7 +142,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void AddPlayer(PhotonMessageInfo info)
     {
-        if(PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
+        if (PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
     }
 
     [PunRPC]
