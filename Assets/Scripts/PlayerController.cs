@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
         readyToJump = true;
         currentHP = maxHP;
         random = new System.Random();
-        if (photonView.IsMine) moveCam.cameraPosition.position = cameraPos.position;
+        //if (photonView.IsMine) moveCam.cameraPosition.position = cameraPos.position;
     }
 
     private void Update()
