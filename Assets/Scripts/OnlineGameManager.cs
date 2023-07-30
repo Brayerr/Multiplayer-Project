@@ -172,6 +172,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         // Exit the room
+        PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
         PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene(0);
     }
