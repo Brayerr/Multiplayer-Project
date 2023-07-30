@@ -34,7 +34,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
 
             localPlayerCam.SetOrientation(localPlayerController.orientation);
-            photonView.RPC("AddPlayer", RpcTarget.MasterClient);
+            photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
 
@@ -140,15 +140,17 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void AddPlayer(PhotonMessageInfo info)
+    public void AddPlayer(PhotonMessageInfo info, int actorNum)
     {
+        Debug.Log($"{nameof(AddPlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
         if (PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
         print($"{info.Sender.ActorNumber} joined the list ");
     }
 
     [PunRPC]
-    public void RemovePlayer(PhotonMessageInfo info)
+    public void RemovePlayer(PhotonMessageInfo info, int actorNum)
     {
+        Debug.Log($"{nameof(RemovePlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
         if (PhotonNetwork.IsMasterClient)
         {
             activePlayers.Remove(info.Sender.ActorNumber);
