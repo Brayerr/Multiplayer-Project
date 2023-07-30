@@ -13,9 +13,10 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private const string SET_PLAYER_CONTROLLER = nameof(SetPlayerController);
 
-
     private List<PlayerController> playerControllers = new List<PlayerController>();
+    
     private PlayerController localPlayerController;
+    private PlayerCam localPlayerCam;
 
 
     private void Start()
@@ -23,6 +24,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         if(PhotonNetwork.IsConnectedAndReady)
         {
             GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", Vector3.zero, transform.rotation);
+
+            localPlayerCam.SetOrientation(localPlayerController.orientation);
         }
     }
 
@@ -99,6 +102,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void SetPlayerController(PlayerController newLocalController)
     {
         localPlayerController = newLocalController;
+    }
+
+    public void SetPlayerCam(PlayerCam newPlayerCam)
+    {
+        localPlayerCam = newPlayerCam;
     }
 
     public void AddPlayerController(PlayerController playerController)
