@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
-    [SerializeField] public int ID;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -185,8 +184,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     public void KillPlayer()
     {
-        photonView.RPC("RemovePlayer", RpcTarget.MasterClient, ID);
-        print($"removed player {ID} from game");
+        photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
+        print($"removed player from game");
     }
 
     #region Animations

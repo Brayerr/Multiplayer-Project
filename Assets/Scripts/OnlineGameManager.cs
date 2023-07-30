@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Photon.Realtime;
 using UnityEngine;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-
+using UnityEngine.SceneManagement;
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
 {
@@ -13,6 +13,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private const string SET_PLAYER_CONTROLLER = nameof(SetPlayerController);
 
+    [SerializeField] private List<int> activePlayers = new List<int>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
     
     private PlayerController localPlayerController;
@@ -30,7 +31,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
             
             localPlayerCam.SetOrientation(localPlayerController.orientation);
-
+            photonView.RPC("AddPlayer", RpcTarget.MasterClient);
         }
     }
 
@@ -118,5 +119,39 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void AddPlayerController(PlayerController playerController)
     {
         playerControllers.Add(playerController);
+    }
+
+    [PunRPC]
+    public void AddPlayer(PhotonMessageInfo info)
+    {
+        if(PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
+    }
+
+    [PunRPC]
+    public void RemovePlayer(PhotonMessageInfo info)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            activePlayers.Remove(info.Sender.ActorNumber);
+
+            if (activePlayers.Count <= 1) EndGameLoop();
+        }
+    }
+
+    public void EndGameLoop()
+    {
+        if (PhotonNetwork.IsMasterClient) photonView.RPC(Constants.END_GAME_RPC, RpcTarget.AllViaServer);
+    }
+
+
+    [PunRPC]
+    public void EndGameRPC()
+    {
+        print("restarting");
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        // Exit the room
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene(0);
     }
 }
