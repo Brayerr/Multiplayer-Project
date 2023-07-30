@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
     public PlayerNameLookAt lookAt;
+    public float lastActorHit;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -170,7 +171,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     void ShootArrow()
     {
         var shot = PhotonNetwork.Instantiate("Arrow", shootingPosition.position, Quaternion.identity);
-        shot.transform.Rotate(orientation.transform.eulerAngles);
+        shot.transform.Rotate(new Vector3(orientation.transform.eulerAngles.x, orientation.transform.eulerAngles.y, PhotonNetwork.LocalPlayer.ActorNumber));
     }
 
     public void TakeDamage()

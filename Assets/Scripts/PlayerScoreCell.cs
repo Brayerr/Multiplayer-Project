@@ -11,6 +11,8 @@ public class PlayerScoreCell : MonoBehaviour
     [SerializeField] TextMeshProUGUI killsText;
     [SerializeField] TextMeshProUGUI deathsText;
 
+    public int actorNum;
+
 
     public void SetNameText(string name)
     {
@@ -23,5 +25,10 @@ public class PlayerScoreCell : MonoBehaviour
     public void SetDeathsText(string name)
     {
         deathsText.text = name;
+    }
+
+    public void SetActorNum(int num)
+    {
+        actorNum = num;
     }
 }

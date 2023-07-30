@@ -18,6 +18,8 @@ public class Shredder : MonoBehaviourPun
             var pc = other.GetComponent<PlayerController>();
             if (pc.currentHP > 0)
             {
+                OnlineScoreManager.Instance.UpdatePlayerKills(pc.lastActorHit, 1);
+                OnlineScoreManager.Instance.UpdatePlayerDeaths(pc.photonView.OwnerActorNr, 1);
                 pc.TakeDamage();
                 pc.Respawn();
             }
