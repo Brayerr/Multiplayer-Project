@@ -4,11 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Explosion : MonoBehaviourPun
+public class Explosion : MonoBehaviourPunCallbacks
 {
+    [SerializeField] List<GameObject> VFXs;
+
+    Transform pickedVfxTransform;
+
+    GameObject vfxGameObject;
+
+    string vfxName;
     // Start is called before the first frame update
     void Start()
     {
+        vfxGameObject = VFXs[Random.Range(0, VFXs.Count)];
+        vfxName = vfxGameObject.name;
+        vfxGameObject = PhotonNetwork.Instantiate("VFX/" + vfxName, transform.position, transform.rotation);
+        pickedVfxTransform = vfxGameObject.transform;
+
+
         Explode(transform.position);
     }
 
@@ -22,15 +35,15 @@ public class Explosion : MonoBehaviourPun
             hitCollider.attachedRigidbody?.AddForce((hitPoint - hitCollider.transform.position).normalized * -20, ForceMode.Impulse);
             Debug.Log("boom");
         }
-        Invoke("Destroye", 1f);
     }
 
     void Grow()
     {
-        Tween tween = transform.DOScale(5, 1);
+        Tween tween = pickedVfxTransform.DOScale(vfxGameObject.transform.localScale * 5, 1);
         tween.OnComplete(() =>
         {
             tween.Kill();
+            Invoke("Destroye", 1f);
         });
     }
 

@@ -94,12 +94,13 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 
 
 
-            welcomePrompt2.text = $"Welcome {PhotonNetwork.NickName} press the button to join the server";
+            welcomePrompt2.text = $"Welcome <color=green>{PhotonNetwork.NickName}</color> press the button to join the server";
             welcomePrompt2.gameObject.SetActive(true);
             joinServer.gameObject.SetActive(true);
 
             if (playerNickname.text == "BlackBetty")
             {
+                welcomePrompt2.text = $"Welcome <color=black>{PhotonNetwork.NickName}</color> press the button to join the server";
                 AudioSource audio = gameObject.AddComponent<AudioSource>();
                 AudioClip clip = Resources.Load<AudioClip>("SFX/Ram Jam  Black Betty");
                 audio.clip = clip;
