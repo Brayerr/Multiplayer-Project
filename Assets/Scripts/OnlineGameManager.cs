@@ -18,14 +18,19 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private PlayerController localPlayerController;
     private PlayerCam localPlayerCam;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
         if(PhotonNetwork.IsConnectedAndReady)
         {
             GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", Vector3.zero, transform.rotation);
-
+            
             localPlayerCam.SetOrientation(localPlayerController.orientation);
+
         }
     }
 
@@ -106,6 +111,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     public void SetPlayerCam(PlayerCam newPlayerCam)
     {
+        print("set player cam");
         localPlayerCam = newPlayerCam;
     }
 

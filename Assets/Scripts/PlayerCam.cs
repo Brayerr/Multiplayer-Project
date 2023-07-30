@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class PlayerCam : MonoBehaviourPun, IPunInstantiateMagicCallback
+public class PlayerCam : MonoBehaviourPun
 {
     [SerializeField] GameObject playerPrefab;
 
@@ -15,9 +15,9 @@ public class PlayerCam : MonoBehaviourPun, IPunInstantiateMagicCallback
     float xRotation;
     float yRotation;
 
-
     private void Start()
     {
+        OnlineGameManager.Instance.SetPlayerCam(this);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -48,13 +48,5 @@ public class PlayerCam : MonoBehaviourPun, IPunInstantiateMagicCallback
     public void SetOrientation(Transform orientation)
     {
         this.orientation = orientation;
-    }
-
-    public void OnPhotonInstantiate(PhotonMessageInfo info)
-    {
-        if(photonView.IsMine)
-        {
-            OnlineGameManager.Instance.SetPlayerCam(this);
-        }
     }
 }
