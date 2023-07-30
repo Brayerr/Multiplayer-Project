@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Shredder : MonoBehaviour
+public class Shredder : MonoBehaviourPun
 {
 
     private void OnTriggerEnter(Collider other)
@@ -23,8 +24,12 @@ public class Shredder : MonoBehaviour
 
             else
             {
-                pc.KillPlayer();
-                print("player died");
+                PhotonView pv = other.gameObject.GetPhotonView();
+                if (pv != null && pv.IsMine)
+                {
+                    OnlineGameManager.Instance.photonView.RPC("RemovePlayer", Photon.Pun.RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+                    print("player died");
+                }
             }
 
         }

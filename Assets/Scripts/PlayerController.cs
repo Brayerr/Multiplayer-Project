@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         //onlineManagerView.RPC("RemovePlayer", RpcTarget.MasterClient);
         //PlayerDied.Invoke();
-        OnlineGameManager.Instance.photonView.RPC("RemovePlayer", RpcTarget.MasterClient , PhotonNetwork.LocalPlayer.ActorNumber);
+        //OnlineGameManager.Instance.photonView.RPC("RemovePlayer", RpcTarget.MasterClient , PhotonNetwork.LocalPlayer.ActorNumber);
         print($"removed player from game");
     }
 
