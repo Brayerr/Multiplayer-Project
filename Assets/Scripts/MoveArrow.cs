@@ -5,7 +5,7 @@ using System;
 using Photon.Pun;
 
 public class MoveArrow : MonoBehaviourPun
-{
+{   
     float arrowForce = 2000;
     [SerializeField] Rigidbody rb;
 
