@@ -64,20 +64,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void InitializeRoomPlayerControllers()
-    {
-        if (!PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(Constants.ROOM_PLAYER_CONTROLLERS))
-        {
-            // Create a new list of PlayerControllers for the new player
-            PlayerController[] newPlayerControllers = new PlayerController[0];
-
-            // Set the custom room property for the new player
-            Hashtable customProperties = new Hashtable();
-            customProperties[Constants.ROOM_PLAYER_CONTROLLERS] = newPlayerControllers;
-            PhotonNetwork.CurrentRoom.SetCustomProperties(customProperties);
-        }
-    }
-
     #region RPC
 
     [PunRPC]
