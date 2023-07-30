@@ -140,7 +140,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void AddPlayer(PhotonMessageInfo info, int actorNum)
+    public void AddPlayer(int actorNum , PhotonMessageInfo info)
     {
         Debug.Log($"{nameof(AddPlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
         if (PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
@@ -148,7 +148,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void RemovePlayer(PhotonMessageInfo info, int actorNum)
+    public void RemovePlayer(int actorNum, PhotonMessageInfo info)
     {
         Debug.Log($"{nameof(RemovePlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
         if (PhotonNetwork.IsMasterClient)
