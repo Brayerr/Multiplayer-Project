@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviourPun
         print("restarting");
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        // Exit the room
+        PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene(0);
     }
 }

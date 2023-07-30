@@ -116,7 +116,11 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 
     public void PhotonPunLogin()
     {
-        PhotonNetwork.ConnectUsingSettings();
+        if (!PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.ConnectUsingSettings();
+        }
+
         if (lobbyPanel != null)
         {
             welcomePanel.gameObject.SetActive(false);
@@ -138,6 +142,16 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     #region Unity Methods
     private void Start()
     {
+        if (PhotonNetwork.IsConnected)
+        {
+            Debug.Log("Player Is connected and ready");
+            welcomePrompt.gameObject.SetActive(false);
+            selectNickName.gameObject.SetActive(false);
+            playerNickname.gameObject.SetActive(false);
+            welcomePanel.gameObject.SetActive(false);
+            PhotonPunLogin();
+        }
+
         if (welcomePanel != null && lobbyPanel != null)
         {
             welcomePanel.gameObject.SetActive(true);
