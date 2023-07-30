@@ -143,15 +143,16 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void AddPlayer(PhotonMessageInfo info)
     {
         if (PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
+        print($"{info.Sender.ActorNumber} joined the list ");
     }
 
     [PunRPC]
-    public void RemovePlayer(int actorNum)
+    public void RemovePlayer(PhotonMessageInfo info)
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            activePlayers.Remove(actorNum);
-            print($"removed player {actorNum}");
+            activePlayers.Remove(info.Sender.ActorNumber);
+            print($"removed player {info.Sender.ActorNumber}");
             if (activePlayers.Count <= 1) EndGameLoop();
         }
     }

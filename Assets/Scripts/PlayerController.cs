@@ -56,6 +56,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     public Transform cameraPos;
     public MoveCamera moveCam;
 
+   // public PhotonView onlineManagerView;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -186,8 +188,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     public void KillPlayer()
     {
-        //photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
-        PlayerDied.Invoke();
+        //onlineManagerView.RPC("RemovePlayer", RpcTarget.MasterClient);
+        //PlayerDied.Invoke();
+        OnlineGameManager.Instance.photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
         print($"removed player from game");
     }
 
