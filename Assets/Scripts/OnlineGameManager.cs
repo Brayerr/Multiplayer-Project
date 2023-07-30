@@ -27,7 +27,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.IsConnectedAndReady)
         {
-            GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
+            GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
             
             localPlayerCam.SetOrientation(localPlayerController.orientation);
 

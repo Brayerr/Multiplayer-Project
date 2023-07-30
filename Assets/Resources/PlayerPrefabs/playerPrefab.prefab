@@ -342,8 +342,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2042525723}
   - component: {fileID: 2042525724}
-  - component: {fileID: 7178202370030922785}
-  - component: {fileID: 1002043764917382731}
+  - component: {fileID: 4114985258597553321}
+  - component: {fileID: 7656724769265379439}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -390,7 +390,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &7178202370030922785
+--- !u!114 &4114985258597553321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -409,11 +409,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 1002043764917382731}
+  - {fileID: 7656724769265379439}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &1002043764917382731
+--- !u!114 &7656724769265379439
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 874379289399165736}
   - component: {fileID: 2588245086304046199}
   m_Layer: 0
-  m_Name: playerPrefab 3
+  m_Name: playerPrefab
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -540,6 +540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 3
   currentHP: 0
+  ID: 0
   moveSpeed: 12
   groundDrag: 5
   jumpForce: 12
@@ -594,8 +595,6 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 2588245086304046199}
-  - {fileID: 7035640007630850973}
-  - {fileID: 1002043764917382731}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -624,8 +623,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2003298663356072888}
-  - component: {fileID: 5082571512649668718}
-  - component: {fileID: 7035640007630850973}
+  - component: {fileID: 6004387573815852305}
+  - component: {fileID: 2686556180776697540}
   m_Layer: 0
   m_Name: Orientation
   m_TagString: Untagged
@@ -650,7 +649,7 @@ Transform:
   m_Father: {fileID: 2003298663039400178}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5082571512649668718
+--- !u!114 &6004387573815852305
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -669,12 +668,12 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 7035640007630850973}
-  - {fileID: 1002043764917382731}
+  - {fileID: 2686556180776697540}
+  - {fileID: 7656724769265379439}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &7035640007630850973
+--- !u!114 &2686556180776697540
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -783,7 +782,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 490b2431cadd95f4c85f2c7386171d85, type: 2}
+  - {fileID: 2100000, guid: 927e686f28061974f90dc2506d078594, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

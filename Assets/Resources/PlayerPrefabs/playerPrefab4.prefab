@@ -342,8 +342,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2042525723}
   - component: {fileID: 2042525724}
-  - component: {fileID: 3519668186782043766}
-  - component: {fileID: 350105579112785178}
+  - component: {fileID: 8120481335692313629}
+  - component: {fileID: 1478085310605308989}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -390,7 +390,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &3519668186782043766
+--- !u!114 &8120481335692313629
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -409,11 +409,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 350105579112785178}
+  - {fileID: 1478085310605308989}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &350105579112785178
+--- !u!114 &1478085310605308989
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 874379289399165736}
   - component: {fileID: 2588245086304046199}
   m_Layer: 0
-  m_Name: playerPrefab 2
+  m_Name: playerPrefab4
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -594,8 +594,8 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 2588245086304046199}
-  - {fileID: 8111321534235884352}
-  - {fileID: 350105579112785178}
+  - {fileID: 9183601200177232494}
+  - {fileID: 1478085310605308989}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -624,8 +624,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2003298663356072888}
-  - component: {fileID: 2514775401975894089}
-  - component: {fileID: 8111321534235884352}
+  - component: {fileID: 8704003468300408814}
+  - component: {fileID: 9183601200177232494}
   m_Layer: 0
   m_Name: Orientation
   m_TagString: Untagged
@@ -650,7 +650,7 @@ Transform:
   m_Father: {fileID: 2003298663039400178}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2514775401975894089
+--- !u!114 &8704003468300408814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -669,12 +669,12 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 8111321534235884352}
-  - {fileID: 350105579112785178}
+  - {fileID: 9183601200177232494}
+  - {fileID: 1478085310605308989}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &8111321534235884352
+--- !u!114 &9183601200177232494
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -783,7 +783,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a658f04fb2ef09149b9329bb0bc1526d, type: 2}
+  - {fileID: 2100000, guid: 5e245342316a7e948be91217e818faee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
