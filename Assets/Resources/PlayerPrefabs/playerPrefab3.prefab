@@ -657,6 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectText: {fileID: 125822896002610295}
+  Fix: {x: 0, y: 0, z: 0}
 --- !u!1 &2003298663039400181
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,7 +779,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 2588245086304046199}

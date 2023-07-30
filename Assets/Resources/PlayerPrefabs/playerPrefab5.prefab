@@ -592,7 +592,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 2588245086304046199}
@@ -1005,3 +1005,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectText: {fileID: 475860913772691886}
+  Fix: {x: 0, y: 0, z: 0}
