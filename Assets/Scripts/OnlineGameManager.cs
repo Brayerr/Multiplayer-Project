@@ -5,6 +5,7 @@ using Photon.Realtime;
 using UnityEngine;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
 {
@@ -29,9 +30,22 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
         PlayerController.PlayerDied += AskToRemovePlayer;
 
+        GameObject go;
+
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
+            if (PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY] == null)
+            {
+                Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} joined the game mid session, giving random skin"); // Player entered the room without a skin (probably mid-game)
+                int characterskindID = Random.Range(0, 6);
+
+                go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{characterskindID}", new Vector3(0, 3, -8), transform.rotation);
+                localPlayerCam.SetOrientation(localPlayerController.orientation);
+                photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+                return;
+            }
+
+            go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
 
             localPlayerCam.SetOrientation(localPlayerController.orientation);
             photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
