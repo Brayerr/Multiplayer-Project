@@ -130,7 +130,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void SpawnPlayer(int i)
     {
-        localPlayerController = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}",
+        localPlayerController = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}",
             spawnPoints[i].transform.position,
             transform.rotation).GetComponent<PlayerController>();
 
