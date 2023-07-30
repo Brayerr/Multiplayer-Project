@@ -31,15 +31,15 @@ public class GameManager : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void RemovePlayer()
+    public void RemovePlayer(int Id)
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            //foreach (var item in activePlayers)
-            //{
-            //    if (item == Id) activePlayers.Remove(item);
-            //}
-            activePlayers.Remove(activePlayers.Count);
+            foreach (var item in activePlayers)
+            {
+                if (item == Id) activePlayers.Remove(item);
+            }
+            //activePlayers.Remove(activePlayers.Count);
 
             if (activePlayers.Count <= 1) EndGameLoop();
         }

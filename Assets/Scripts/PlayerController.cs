@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void KillPlayer()
     {
-        photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
+        photonView.RPC("RemovePlayer", RpcTarget.MasterClient, ID);
         print($"removed player {ID} from game");
     }
 
