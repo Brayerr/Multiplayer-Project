@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using Photon.Pun;
 
-public class PlayerController : MonoBehaviourPunCallbacks
+public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
@@ -207,10 +207,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     #endregion
 
+
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (info.photonView.IsMine)
+        {
             OnlineGameManager.Instance.SetPlayerController(this);
-        OnlineGameManager.Instance.AddPlayerController(this);
+            OnlineGameManager.Instance.AddPlayerController(this);
+        }
     }
 }

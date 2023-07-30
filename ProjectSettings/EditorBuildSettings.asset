@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Character Selection.unity
     guid: add5db16553d48549a4ba2b41c1424b4
   - enabled: 1
-    path: Assets/Scenes/Playground.unity
-    guid: 3a0184531eaafc844a204b385246cf37
+    path: Assets/Scenes/Alons Workshop.unity
+    guid: 814d790af0be64c4fa566a3c056605bb
+  - enabled: 1
+    path: Assets/Scenes/Arena.unity
+    guid: 4f7a57714ea0fbb4da14b0b5142d508f
   m_configObjects: {}

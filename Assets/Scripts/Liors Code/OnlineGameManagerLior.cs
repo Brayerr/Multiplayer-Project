@@ -13,9 +13,9 @@ using Random = UnityEngine.Random;
 public class OnlineGameManagerLior : MonoBehaviourPunCallbacks
 {
     //public static OnlineGameManagerLior Instance { get; private set; }
-    
+
     //public const string NETWORK_PLAYER_PREFAB_NAME = "NetworkPlayerObject";
- 
+
     //private const string GAME_STARTED_RPC = nameof(GameStarted);
     //private const string COUNTDOWN_STARTED_RPC = nameof(CountdownStarted);
     //private const string ASK_FOR_RANDOM_SPAWN_POINT_RPC = nameof(PlayerInitialProcess);
@@ -36,33 +36,33 @@ public class OnlineGameManagerLior : MonoBehaviourPunCallbacks
 
     //private bool isCountingForStartGame;
     //private float timeLeftForStartGame = 0;
-    
+
     //public void StartGameCountdown()
     //{
     //    if (PhotonNetwork.IsMasterClient)
     //    {
     //        int countdownRandomTime = Random.Range(3, 8);
     //        photonView.RPC(COUNTDOWN_STARTED_RPC,
-    //            RpcTarget.AllViaServer, countdownRandomTime );
+    //            RpcTarget.AllViaServer, countdownRandomTime);
     //        startGameButtonUI.interactable = false;
     //    }
     //}
-    
+
     //public override void OnMasterClientSwitched(Player newMasterClient)
     //{
     //    base.OnMasterClientSwitched(newMasterClient);
     //    Debug.Log("Masterclient has been switched!" + Environment.NewLine
     //    + "Masterclient is now actor number " + newMasterClient.ActorNumber);
     //}
-    
+
     //public override void OnPlayerLeftRoom(Player otherPlayer)
     //{
     //    base.OnPlayerLeftRoom(otherPlayer);
-    //    if(otherPlayer.IsInactive)
+    //    if (otherPlayer.IsInactive)
     //        Debug.Log("Player " + otherPlayer.NickName + " Left the room, he has 10 seconds to come back.");
     //    else
     //    {
-    //        Debug.Log("Player " + otherPlayer.NickName +" Will not comeback");
+    //        Debug.Log("Player " + otherPlayer.NickName + " Will not comeback");
     //    }
     //}
 
@@ -105,7 +105,7 @@ public class OnlineGameManagerLior : MonoBehaviourPunCallbacks
 
     //        bool isReturningPlayer = false;
     //        Player oldPlayer = null;
-            
+
     //        foreach (Player player in PhotonNetwork.PlayerList)
     //        {
     //            if (!player.CustomProperties.ContainsKey(Constants.PLAYER_INITIALIZED) ||
@@ -142,19 +142,19 @@ public class OnlineGameManagerLior : MonoBehaviourPunCallbacks
     //        }
     //        else
     //        {
-    //            newPlayer.SetCustomProperties(new Hashtable{ { Constants.PLAYER_INITIALIZED, true } });
-                
+    //            newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED, true } });
+
     //            List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
     //            foreach (SpawnPoint spawnPoint in spawnPoints)
     //            {
-    //                if(!spawnPoint.taken)
+    //                if (!spawnPoint.taken)
     //                    availableSpawnPoints.Add(spawnPoint);
     //            }
 
     //            SpawnPoint chosenSpawnPoint =
     //                availableSpawnPoints[Random.Range(0, availableSpawnPoints.Count)];
     //            chosenSpawnPoint.taken = true;
-        
+
     //            bool[] takenSpawnPoints = new bool[spawnPoints.Length];
     //            for (int i = 0; i < spawnPoints.Length; i++)
     //            {
@@ -171,16 +171,16 @@ public class OnlineGameManagerLior : MonoBehaviourPunCallbacks
     //void SpawnPlayer(int spawnPointID, bool[] takenSpawnPoints)
     //{
     //    SpawnPoint spawnPoint = GetSpawnPointByID(spawnPointID);
-    //    PhotonNetwork.Instantiate(NETWORK_PLAYER_PREFAB_NAME, 
-    //                spawnPoint.transform.position, 
+    //    PhotonNetwork.Instantiate(NETWORK_PLAYER_PREFAB_NAME,
+    //                spawnPoint.transform.position,
     //                spawnPoint.transform.rotation)
     //            .GetComponent<PlayerController>();
-        
+
     //    for (int i = 0; i < takenSpawnPoints.Length; i++)
     //    {
     //        spawnPoints[i].taken = takenSpawnPoints[i];
     //    }
-        
+
     //}
 
     //[PunRPC]
