@@ -19,5 +19,8 @@ public static class Constants
     public const string LOAD_GAME_NAME = "JoinOrStartGame";
     public const string PING_HASHTABLE_NAME = "ping";
 
+    public const string PLAYER_KILLS_KEY = "Kills";
+    public const string PLAYER_DEATHS_KEY = "Deaths";
+
     public static string[] ProprtiesToClearOnLeaveRoom = { PLAYER_CHARACTER_ID_PROPERTY_KEY,PLAYER_READY_PROPERTY_KEY,PING_HASHTABLE_NAME };
 }

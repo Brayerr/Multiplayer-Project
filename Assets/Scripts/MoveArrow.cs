@@ -19,7 +19,7 @@ public class MoveArrow : MonoBehaviourPun
         if (PhotonNetwork.IsMasterClient)
         {
             Vector3 hitPoint = collision.GetContact(0).point;
-            PhotonNetwork.Instantiate("Explosion", hitPoint, Quaternion.identity);
+            PhotonNetwork.Instantiate("Explosion", hitPoint, new Quaternion(0, 0, transform.eulerAngles.z, 0));
             Debug.Log("hit");
         }
             Destroy(gameObject);

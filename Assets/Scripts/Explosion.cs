@@ -31,8 +31,11 @@ public class Explosion : MonoBehaviourPunCallbacks
         Collider[] hitColliders = Physics.OverlapSphere(hitPoint, 5);
         foreach (var hitCollider in hitColliders)
         {
-            //hitCollider.attachedRigidbody?.AddExplosionForce(500, hitPoint, 5, 0.05f);
             hitCollider.attachedRigidbody?.AddForce((hitPoint - hitCollider.transform.position).normalized * -20, ForceMode.Impulse);
+            if(hitCollider.attachedRigidbody.gameObject.TryGetComponent<PlayerController>(out PlayerController conroller))
+            {
+                conroller.lastActorHit = transform.eulerAngles.z;
+            }
             Debug.Log("boom");
         }
     }
