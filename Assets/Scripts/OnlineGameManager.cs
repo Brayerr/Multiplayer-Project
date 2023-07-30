@@ -43,16 +43,13 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
                 go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{characterskindID}", new Vector3(0, 3, -8), transform.rotation);
 
                 localPlayerCam.SetOrientation(localPlayerController.orientation);
-                localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
                 photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
                 return;
             }
 
             go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
 
-
             localPlayerCam.SetOrientation(localPlayerController.orientation);
-            localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
             photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
