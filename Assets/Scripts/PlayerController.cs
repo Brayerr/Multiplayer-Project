@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     public Transform cameraPos;
     public MoveCamera moveCam;
 
+    public int spawnPoint { get; private set; }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -215,5 +217,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
             OnlineGameManager.Instance.SetPlayerController(this);
             OnlineGameManager.Instance.AddPlayerController(this);
         }
+    }
+
+    public void SetSpawn(int spawnID)
+    {
+        spawnPoint = spawnID;
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Photon.Realtime;
 using UnityEngine;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Random = UnityEngine.Random;
 
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
@@ -12,11 +13,15 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
 
     private const string SET_PLAYER_CONTROLLER = nameof(SetPlayerController);
+    private const string SPAWN_PLAYER = nameof(SpawnPlayer);
+    private const string ASK_FOR_SPAWN = nameof(AskForSpawnPoint);
 
     private List<PlayerController> playerControllers = new List<PlayerController>();
-    
+
     private PlayerController localPlayerController;
     private PlayerCam localPlayerCam;
+
+    [SerializeField] SpawnPoint[] spawnPoints;
 
     private void Awake()
     {
@@ -25,7 +30,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        if(PhotonNetwork.IsConnectedAndReady)
+        if (PhotonNetwork.IsConnectedAndReady)
         {
             //ask master to initialize player
             //after initialize, either spawn player or give old player back
@@ -33,7 +38,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    
+
 
     #region RPC
 
@@ -41,7 +46,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     void InitializePlayer(PhotonMessageInfo info)
     {
         Player newPlayer = info.Sender;
-        if(!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient)
         {
             return;
         }
@@ -69,7 +74,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
 
         print($"player {newPlayer.NickName} has joined, isReturningPlayer: {isReturningPlayer}");
-        
+
         if (isReturningPlayer)
         {
             foreach (PhotonView photonView in PhotonNetwork.PhotonViewCollection)
@@ -87,16 +92,36 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         {
             newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
         }
+        photonView.RPC(ASK_FOR_SPAWN, RpcTarget.MasterClient);
     }
 
     [PunRPC]
-    public void SpawnPlayer()
+    public void AskForSpawnPoint(PhotonMessageInfo photonMessageInfo)
     {
-        GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
+        int rnd = Random.Range(0, spawnPoints.Length);
+        while (spawnPoints[rnd].isTaken == true)
+        {
+            rnd = (rnd + 1) % spawnPoints.Length;
+        }
+        spawnPoints[rnd].isTaken = true;
+        photonView.RPC(SPAWN_PLAYER, photonMessageInfo.Sender, rnd);
+    }
+
+    [PunRPC]
+    public void SpawnPlayer(int i)
+    {
+        localPlayerController = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}",
+            spawnPoints[i].transform.position,
+            transform.rotation).GetComponent<PlayerController>();
 
         localPlayerCam.SetOrientation(localPlayerController.orientation);
     }
 
+    [PunRPC]
+    public void RespawnPlayer()
+    {
+        localPlayerController.transform.position = spawnPoints[localPlayerController.spawnPoint].transform.position;
+    }
 
     [PunRPC]
     void SetPlayerController()
@@ -128,5 +153,13 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void AddPlayerController(PlayerController playerController)
     {
         playerControllers.Add(playerController);
+    }
+
+    void InitializeSpawnPoints()
+    {
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            spawnPoints[i].AssignID(i);
+        }
     }
 }
