@@ -7,22 +7,47 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviourPun
 {
-    public static List<PlayerController> activePlayers = new List<PlayerController>();
+    public List<int> activePlayers = new List<int>();
 
-    private void Start()
+    //private void Start()
+    //{
+    //    AddPlayers();
+    //}
+
+    //public void AddPlayers()
+    //{
+    //    int iterator = 0;
+    //    foreach (var item in PhotonNetwork.PlayerList)
+    //    {
+    //        activePlayers.Add(iterator);
+    //        iterator++;
+    //    }
+    //}
+
+    [PunRPC]
+    public void AddPlayer(int ID)
     {
-        PlayerController.LastManStanding += EndGameLoop;
+        if (PhotonNetwork.IsMasterClient) activePlayers.Add(ID);
     }
 
-    private void OnDestroy()
+    [PunRPC]
+    public void RemovePlayer(int Id)
     {
-        PlayerController.LastManStanding -= EndGameLoop;
-    }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (var item in activePlayers)
+            {
+                if (item == Id) activePlayers.Remove(item);
+            }
+            //activePlayers.Remove(activePlayers.Count);
 
+            if (activePlayers.Count <= 1) EndGameLoop();
+        }
+    }
 
     public void EndGameLoop()
     {
-        if(PhotonNetwork.IsMasterClient) photonView.RPC(Constants.END_GAME_RPC, RpcTarget.AllViaServer);
+        if (PhotonNetwork.IsMasterClient) photonView.RPC(Constants.END_GAME_RPC, RpcTarget.AllViaServer);
     }
 
 

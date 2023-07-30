@@ -4,13 +4,12 @@ using UnityEngine;
 using System;
 using Photon.Pun;
 
-public class PlayerController : MonoBehaviourPunCallbacks
+public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
-    public static event Action LastManStanding;
-
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
+    [SerializeField] public int ID;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -186,12 +185,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void KillPlayer()
     {
-        if (GameManager.activePlayers.Contains(this)) GameManager.activePlayers.Remove(this);
-        if (GameManager.activePlayers.Count <= 1)
-        {
-            print("last man standing");
-            LastManStanding.Invoke();
-        }
+        photonView.RPC("RemovePlayer", RpcTarget.MasterClient, ID);
+        print($"removed player {ID} from game");
     }
 
     #region Animations
@@ -212,10 +207,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     #endregion
 
+
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (info.photonView.IsMine)
+        {
             OnlineGameManager.Instance.SetPlayerController(this);
-        OnlineGameManager.Instance.AddPlayerController(this);
+            OnlineGameManager.Instance.AddPlayerController(this);
+        }
     }
 }

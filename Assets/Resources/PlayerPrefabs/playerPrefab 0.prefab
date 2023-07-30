@@ -540,6 +540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 3
   currentHP: 0
+  ID: 0
   moveSpeed: 12
   groundDrag: 5
   jumpForce: 12
@@ -594,8 +595,6 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 2588245086304046199}
-  - {fileID: 2686556180776697540}
-  - {fileID: 7656724769265379439}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
