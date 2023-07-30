@@ -112,9 +112,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
                 }
             }
             newPlayer.SetCustomProperties(oldPlayer.CustomProperties);
-            PlayerInitialized.Invoke(oldPlayer.ActorNumber);
-            //photonView.RPC(SET_PLAYER_CONTROLLER, newPlayer);
-            localPlayerCam.SetOrientation(localPlayerController.orientation);
+            
+            photonView.RPC(SET_PLAYER_CONTROLLER, newPlayer, oldPlayer.ActorNumber);
         }
         else
         {
@@ -170,18 +169,19 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void SetPlayerController()
+    void SetPlayerController(int oldActorNum)
     {
-        foreach (PlayerController playerController in playerControllers)
-        {
-            if (playerController.photonView.OwnerActorNr == PhotonNetwork.LocalPlayer.ActorNumber)
-            {
-                print("set controller of returning player");
-                localPlayerController = playerController;
-                localPlayerCam.SetOrientation(localPlayerController.orientation);
-                break;
-            }
-        }
+        PlayerInitialized.Invoke(oldActorNum);
+        //foreach (PlayerController playerController in playerControllers)
+        //{
+        //    if (playerController.photonView.OwnerActorNr == PhotonNetwork.LocalPlayer.ActorNumber)
+        //    {
+        //        print("set controller of returning player");
+        //        localPlayerController = playerController;
+        //        localPlayerCam.SetOrientation(localPlayerController.orientation);
+        //        break;
+        //    }
+        //}
     }
 
     [PunRPC]
@@ -249,6 +249,10 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         localPlayerCam = newPlayerCam;
     }
 
+    public PlayerController GetLocalPlayerController()
+    {
+        return localPlayerController;
+    }
 
     public void AskToRemovePlayer()
     {

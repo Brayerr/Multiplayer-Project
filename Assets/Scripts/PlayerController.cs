@@ -223,6 +223,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         if (oldActorNumber == photonView.CreatorActorNr)
         {
+            print("assigning playercontroller");
             OnlineGameManager.Instance.SetPlayerControllerLocally(this);
         }
     }

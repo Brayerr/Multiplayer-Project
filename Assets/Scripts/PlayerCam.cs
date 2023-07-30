@@ -52,6 +52,7 @@ public class PlayerCam : MonoBehaviourPun
         if(oldActorNumber == photonView.CreatorActorNr)
         {
             OnlineGameManager.Instance.SetPlayerCam(this);
+            SetOrientation(OnlineGameManager.Instance.GetLocalPlayerController().orientation);
         }
     }
 }
