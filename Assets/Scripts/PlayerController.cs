@@ -6,6 +6,8 @@ using Photon.Pun;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
+    public static event Action PlayerDied;
+
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
@@ -184,7 +186,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     public void KillPlayer()
     {
-        photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
+        //photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
+        PlayerDied.Invoke();
         print($"removed player from game");
     }
 

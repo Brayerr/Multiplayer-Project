@@ -26,6 +26,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        PlayerController.PlayerDied += AskToRemovePlayer;
         if(PhotonNetwork.IsConnectedAndReady)
         {
             GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
@@ -33,6 +34,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             localPlayerCam.SetOrientation(localPlayerController.orientation);
             photonView.RPC("AddPlayer", RpcTarget.MasterClient);
         }
+    }
+
+    private void OnDestroy()
+    {
+        PlayerController.PlayerDied -= AskToRemovePlayer;
     }
 
     #region RPC
@@ -119,6 +125,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void AddPlayerController(PlayerController playerController)
     {
         playerControllers.Add(playerController);
+    }
+
+    public void AskToRemovePlayer()
+    {
+        photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
     }
 
     [PunRPC]
