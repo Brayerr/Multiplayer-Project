@@ -136,4 +136,17 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         playerControllers.Add(playerController);
     }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        if(otherPlayer.IsInactive)
+        {
+            //player can still return
+        }
+        else
+        {
+            //player ded
+        }
+    }
 }
