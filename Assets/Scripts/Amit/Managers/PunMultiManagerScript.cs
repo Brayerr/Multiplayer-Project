@@ -188,16 +188,11 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
             PhotonNetwork.EnableCloseConnection = true;
             PhotonNetwork.JoinLobby();
             PlayerCustomPropPing();
-            
+            SetUsersUniqueID();
         }
     }
 
-    private void SetUsersUniqueID()
-    {
-        Hashtable hashtable = new Hashtable();
-        hashtable.Add(Constants.USER_UNIQUE_ID, SystemInfo.deviceUniqueIdentifier);
-        PhotonNetwork.SetPlayerCustomProperties(hashtable);
-    }
+    
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -563,6 +558,13 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         {
             photonView.RPC(Constants.LOAD_GAME_NAME, RpcTarget.AllBuffered);
         }
+    }
+
+    private void SetUsersUniqueID()
+    {
+        Hashtable hashtable = new Hashtable();
+        hashtable.Add(Constants.USER_UNIQUE_ID, SystemInfo.deviceUniqueIdentifier);
+        PhotonNetwork.SetPlayerCustomProperties(hashtable);
     }
 
     private static void PlayerCustomPropPing()

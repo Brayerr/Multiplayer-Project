@@ -54,6 +54,7 @@ MonoBehaviour:
   - PlayerDiedRPC
   - RemovePlayer
   - AddPlayer
+  - SpawnPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

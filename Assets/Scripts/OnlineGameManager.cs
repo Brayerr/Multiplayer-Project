@@ -27,12 +27,13 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.IsConnectedAndReady)
         {
-            GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
-            
-            localPlayerCam.SetOrientation(localPlayerController.orientation);
-
+            //ask master to initialize player
+            //after initialize, either spawn player or give old player back
+            //if spawn player then choose spawn location
         }
     }
+
+    
 
     #region RPC
 
@@ -87,6 +88,15 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
         }
     }
+
+    [PunRPC]
+    public void SpawnPlayer()
+    {
+        GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
+
+        localPlayerCam.SetOrientation(localPlayerController.orientation);
+    }
+
 
     [PunRPC]
     void SetPlayerController()
