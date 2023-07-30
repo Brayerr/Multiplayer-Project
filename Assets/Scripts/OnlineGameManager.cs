@@ -26,10 +26,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        if (photonView.IsMine)
-        {
-            PlayerController.PlayerDied += AskToRemovePlayer;
-        }
+
+        PlayerController.PlayerDied += AskToRemovePlayer;
 
         if (PhotonNetwork.IsConnectedAndReady)
         {
@@ -42,10 +40,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private void OnDestroy()
     {
-        if (photonView.IsMine)
-        {
-            PlayerController.PlayerDied -= AskToRemovePlayer;
-        }
+
+        PlayerController.PlayerDied -= AskToRemovePlayer;
     }
 
     #region RPC
@@ -136,7 +132,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     public void AskToRemovePlayer()
     {
-        photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
+        if (photonView.IsMine)
+        {
+            photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
+            print("activating remove RPC");
+        }
     }
 
     [PunRPC]
@@ -151,7 +151,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             activePlayers.Remove(info.Sender.ActorNumber);
-
+            print($"removed player {info.Sender.ActorNumber}");
             if (activePlayers.Count <= 1) EndGameLoop();
         }
     }
