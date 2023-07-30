@@ -96,7 +96,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     private void FixedUpdate()
     {
-        if (photonView.AmOwner) MovePlayer();
+        if (photonView.AmOwner)
+        {
+            if (OnlineGameManager.Instance.GetLocalPlayerController() == null)
+            {
+                OnlineGameManager.Instance.SetPlayerControllerLocally(this);
+            }
+
+            MovePlayer();
+        }
     }
 
     public Transform GetOrientation() => orientation;
@@ -105,6 +113,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         if (photonView.AmOwner)
         {
+            
+
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
 

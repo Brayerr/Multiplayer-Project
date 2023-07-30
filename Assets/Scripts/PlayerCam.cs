@@ -24,6 +24,10 @@ public class PlayerCam : MonoBehaviourPun
     {
         if(orientation == null)
         {
+            if (OnlineGameManager.Instance.GetLocalPlayerController() != null)
+            {
+                SetOrientation(OnlineGameManager.Instance.GetLocalPlayerController().orientation);
+            }
             return;
         }
         transform.position = orientation.position;
