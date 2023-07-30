@@ -50,12 +50,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     float verticalInput;
 
     Vector3 moveDirection;
-    Vector3 moveDirectionHolder = Vector3.zero;
 
     Rigidbody rb;
-
-    public Transform cameraPos;
-    public MoveCamera moveCam;
 
     public int spawnPoint { get; private set; }
 
@@ -185,14 +181,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         rb.velocity = Vector3.zero;
         transform.position = new Vector3(random.Next(0, 5), random.Next(0, 5), 1);
-    }
-
-    public void KillPlayer()
-    {
-        //onlineManagerView.RPC("RemovePlayer", RpcTarget.MasterClient);
-        //PlayerDied.Invoke();
-        //OnlineGameManager.Instance.photonView.RPC("RemovePlayer", RpcTarget.MasterClient , PhotonNetwork.LocalPlayer.ActorNumber);
-        print($"removed player from game");
     }
 
     #region Animations

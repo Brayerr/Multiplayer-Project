@@ -168,6 +168,38 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    public void AddPlayer(int actorNum, PhotonMessageInfo info)
+    {
+        Debug.Log($"{nameof(AddPlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
+        if (PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
+        print($"{info.Sender.ActorNumber} joined the list ");
+    }
+
+    [PunRPC]
+    public void RemovePlayer(int actorNum, PhotonMessageInfo info)
+    {
+        Debug.Log($"{nameof(RemovePlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            activePlayers.Remove(info.Sender.ActorNumber);
+            print($"removed player {info.Sender.ActorNumber}");
+            if (activePlayers.Count <= 1) EndGameLoop();
+        }
+    }
+
+    [PunRPC]
+    public void EndGameRPC()
+    {
+        print("restarting");
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        // Exit the room
+        PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene(0);
+    }
+
     #endregion
 
     public void SetPlayerController(PlayerController newLocalController)
@@ -195,42 +227,9 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
-    public void AddPlayer(int actorNum, PhotonMessageInfo info)
-    {
-        Debug.Log($"{nameof(AddPlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
-        if (PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
-        print($"{info.Sender.ActorNumber} joined the list ");
-    }
-
-    [PunRPC]
-    public void RemovePlayer(int actorNum, PhotonMessageInfo info)
-    {
-        Debug.Log($"{nameof(RemovePlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
-        if (PhotonNetwork.IsMasterClient)
-        {
-            activePlayers.Remove(info.Sender.ActorNumber);
-            print($"removed player {info.Sender.ActorNumber}");
-            if (activePlayers.Count <= 1) EndGameLoop();
-        }
-    }
-
     public void EndGameLoop()
     {
         if (PhotonNetwork.IsMasterClient) photonView.RPC(Constants.END_GAME_RPC, RpcTarget.AllViaServer);
-    }
-
-
-    [PunRPC]
-    public void EndGameRPC()
-    {
-        print("restarting");
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        // Exit the room
-        PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
-        PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene(0);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
