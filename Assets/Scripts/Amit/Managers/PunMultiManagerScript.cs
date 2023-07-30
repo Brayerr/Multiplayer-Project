@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using ExitGames.Client.Photon.StructWrapping;
 using Unity.VisualScripting;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using System;
 
 public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 {
@@ -64,14 +65,11 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject playerUIPrefab;
     [SerializeField] private GameObject playerUIContext;
 
-    [Header("Player")]
-    [SerializeField] private GameObject PlayerPrefab;
     //const string PLAYER_PREFAB_NAME = "PlayerCapsule";
     //private const string SCORE_KEY_NAME = "Score";
     //public const string LOAD_GAME_NAME = "JoinOrStartGame";
     //public const string PING_HASHTABLE_NAME = "ping";
-
-    List<RoomInfo> cachedRoomInfos = new();
+    public List<RoomInfo> cachedRoomInfos = new();
     List<string> RoomNames = new();
 
     private bool isMasterClient => PhotonNetwork.IsMasterClient;
@@ -247,35 +245,39 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 
         foreach (RoomInfo roomInfo in roomList)
         {
-            // Remove and Add room if the name exists but something else has been changed
-            if (RoomNames.Contains(roomInfo.Name))
-            {
-                RoomInfo t = null;
-                RoomInfo a = null;
-                foreach(var room in cachedRoomInfos)
-                {
-                    if (room.Name == roomInfo.Name)
-                    {
-                        t = room;
-
-                        if (!roomInfo.RemovedFromList)
-                        {
-                            a = roomInfo;
-                        }
-                        
-                        RoomNames.Remove(roomInfo.Name);
-                    }
-                }
-                if (t != null) { cachedRoomInfos.Remove(t); }
-                if (a != null) { cachedRoomInfos.Add(a);}
-            }
-
             // Add room info if no room has the name
             if (!RoomNames.Contains(roomInfo.Name))
             {
                 RoomNames.Add(roomInfo.Name);
                 cachedRoomInfos.Add(roomInfo);
+                continue;
             }
+
+            // Remove and Add room if the name exists but something else has been changed
+            if (RoomNames.Contains(roomInfo.Name))
+            {
+                RoomInfo roomToRemove = null;
+                RoomInfo roomToAdd = null;
+
+                foreach(var room in cachedRoomInfos)
+                {
+                    if (room.Name == roomInfo.Name)
+                    {
+                        roomToRemove = room;
+
+                        if (!roomInfo.RemovedFromList)
+                        {
+                            roomToAdd = roomInfo;
+                            continue;
+                        }
+
+                        RoomNames.Remove(roomInfo.Name);
+                    }
+                }
+                if (roomToRemove != null) { cachedRoomInfos.Remove(roomToRemove); }
+                if (roomToAdd != null) { cachedRoomInfos.Add(roomToAdd);}
+            }
+
         }
 
         if (cachedRoomInfos.Count > 0)
@@ -284,7 +286,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
             Debug.Log("Rooms Created");
             foreach (var roominfo in cachedRoomInfos)
             {
-
+                Debug.Log(roominfo.Name);
                 if (roominfo.PlayerCount > 0)
                 {
                     UIRoomInstantion(roominfo);
@@ -431,7 +433,6 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
             currentSelctedRoom = roominfo.Name;
             joinRoomButton.onClick.AddListener(JoinRoom);
         }
-        Debug.Log("!HasInfo");
     }
 
 
@@ -446,8 +447,9 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         var tmpTempList = roomUIPrefab.GetComponentsInChildren<TMP_Text>();
         tmpTempList[0].text = roominfo.Name;
         tmpTempList[1].text = $"{roominfo.PlayerCount}/{roominfo.MaxPlayers}";
-        roomUIPrefab.GetComponentInChildren<MyRoomInfo>().SetRoomInfo(roominfo);
-        UIRoomList.Add(Instantiate<GameObject>(roomUIPrefab, scrollViewContent.transform));
+        GameObject go;
+        UIRoomList.Add(go = Instantiate<GameObject>(roomUIPrefab, scrollViewContent.transform));
+        go.GetComponentInChildren<MyRoomInfo>().SetRoomInfo(roominfo);
     }
 
     public void SelectedRoomsCount(int index) => currentSelctedRoom += index;
@@ -519,6 +521,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 
     public void CreateRoomSwitch(bool createRoom)
     {
+        currentSelctedRoom = null;
         Debug.Log($"Room Switch is called with {createRoom} boolean");
         if (createRoom)
         {

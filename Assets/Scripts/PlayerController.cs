@@ -6,9 +6,12 @@ using Photon.Pun;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
+    public static event Action PlayerDied;
+
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
+    public PlayerNameLookAt lookAt;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -53,6 +56,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     public Transform cameraPos;
     public MoveCamera moveCam;
+
+   // public PhotonView onlineManagerView;
 
     private void Start()
     {
@@ -184,7 +189,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     public void KillPlayer()
     {
-        photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
+        //onlineManagerView.RPC("RemovePlayer", RpcTarget.MasterClient);
+        //PlayerDied.Invoke();
+        //OnlineGameManager.Instance.photonView.RPC("RemovePlayer", RpcTarget.MasterClient , PhotonNetwork.LocalPlayer.ActorNumber);
         print($"removed player from game");
     }
 

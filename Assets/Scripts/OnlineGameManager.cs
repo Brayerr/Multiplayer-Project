@@ -5,6 +5,7 @@ using Photon.Realtime;
 using UnityEngine;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
 {
@@ -15,7 +16,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private List<int> activePlayers = new List<int>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
-    
+
     private PlayerController localPlayerController;
     private PlayerCam localPlayerCam;
 
@@ -26,13 +27,37 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        if(PhotonNetwork.IsConnectedAndReady)
+
+        PlayerController.PlayerDied += AskToRemovePlayer;
+
+        GameObject go;
+        PlayerController pc;
+
+        if (PhotonNetwork.IsConnectedAndReady)
         {
-            GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
-            
+            if (PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY] == null)
+            {
+                Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} joined the game mid session, giving random skin"); // Player entered the room without a skin (probably mid-game)
+                int characterskindID = Random.Range(0, 6);
+
+                go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{characterskindID}", new Vector3(0, 3, -8), transform.rotation);
+
+                localPlayerCam.SetOrientation(localPlayerController.orientation);
+                photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+                return;
+            }
+
+            go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
+
             localPlayerCam.SetOrientation(localPlayerController.orientation);
-            photonView.RPC("AddPlayer", RpcTarget.MasterClient);
+            photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
         }
+    }
+
+    private void OnDestroy()
+    {
+
+        PlayerController.PlayerDied -= AskToRemovePlayer;
     }
 
     #region RPC
@@ -41,7 +66,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     void InitializePlayer(PhotonMessageInfo info)
     {
         Player newPlayer = info.Sender;
-        if(!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient)
         {
             return;
         }
@@ -69,7 +94,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
 
         print($"player {newPlayer.NickName} has joined, isReturningPlayer: {isReturningPlayer}");
-        
+
         if (isReturningPlayer)
         {
             foreach (PhotonView photonView in PhotonNetwork.PhotonViewCollection)
@@ -121,19 +146,31 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         playerControllers.Add(playerController);
     }
 
-    [PunRPC]
-    public void AddPlayer(PhotonMessageInfo info)
+    public void AskToRemovePlayer()
     {
-        if(PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
+        if (photonView.IsMine)
+        {
+            photonView.RPC("RemovePlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+            print("activating remove RPC");
+        }
     }
 
     [PunRPC]
-    public void RemovePlayer(PhotonMessageInfo info)
+    public void AddPlayer(int actorNum , PhotonMessageInfo info)
     {
+        Debug.Log($"{nameof(AddPlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
+        if (PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
+        print($"{info.Sender.ActorNumber} joined the list ");
+    }
+
+    [PunRPC]
+    public void RemovePlayer(int actorNum, PhotonMessageInfo info)
+    {
+        Debug.Log($"{nameof(RemovePlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
         if (PhotonNetwork.IsMasterClient)
         {
             activePlayers.Remove(info.Sender.ActorNumber);
-
+            print($"removed player {info.Sender.ActorNumber}");
             if (activePlayers.Count <= 1) EndGameLoop();
         }
     }
@@ -151,6 +188,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         // Exit the room
+        PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
         PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene(0);
     }
