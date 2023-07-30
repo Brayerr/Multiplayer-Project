@@ -540,6 +540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 3
   currentHP: 0
+  ID: 0
   moveSpeed: 12
   groundDrag: 5
   jumpForce: 12
@@ -590,12 +591,10 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 2588245086304046199}
-  - {fileID: 1793618565596086329}
-  - {fileID: 5005538936250101843}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

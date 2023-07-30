@@ -85,8 +85,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            photonView.RPC(SPAWN_PLAYER, RpcTarget.MasterClient);
-            newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
+            if(info.Sender.ActorNumber == newPlayer.ActorNumber)
+            {
+                newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
+                photonView.RPC(SPAWN_PLAYER, newPlayer);
+            }
         }
     }
 
