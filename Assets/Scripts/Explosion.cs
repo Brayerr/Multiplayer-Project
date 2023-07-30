@@ -35,15 +35,15 @@ public class Explosion : MonoBehaviourPunCallbacks
             hitCollider.attachedRigidbody?.AddForce((hitPoint - hitCollider.transform.position).normalized * -20, ForceMode.Impulse);
             Debug.Log("boom");
         }
-        Invoke("Destroye", 1f);
     }
 
     void Grow()
     {
-        Tween tween = pickedVfxTransform.DOScale(5, 1);
+        Tween tween = pickedVfxTransform.DOScale(vfxGameObject.transform.localScale * 5, 1);
         tween.OnComplete(() =>
         {
             tween.Kill();
+            Invoke("Destroye", 1f);
         });
     }
 

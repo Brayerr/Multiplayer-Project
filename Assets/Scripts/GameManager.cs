@@ -34,6 +34,11 @@ public class GameManager : MonoBehaviourPun
         Cursor.visible = true;
         // Exit the room
         PhotonNetwork.LeaveRoom();
+        string[] customToRemove = new string[3];
+        customToRemove[0] = Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY;
+        customToRemove[1] = Constants.PLAYER_READY_PROPERTY_KEY;
+        customToRemove[2] = Constants.PING_HASHTABLE_NAME;
+        PhotonNetwork.RemovePlayerCustomProperties(customToRemove);     // the array has to be completely filled with strings
         SceneManager.LoadScene(0);
     }
 }
