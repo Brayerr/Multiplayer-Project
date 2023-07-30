@@ -12,6 +12,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
 
     private const string SET_PLAYER_CONTROLLER = nameof(SetPlayerController);
+    private const string SPAWN_PLAYER = nameof(SpawnPlayer);
+    private const string INITIALIZE_PLAYER = nameof(InitializePlayer);
 
     private List<PlayerController> playerControllers = new List<PlayerController>();
     
@@ -27,9 +29,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.IsConnectedAndReady)
         {
-            //ask master to initialize player
-            //after initialize, either spawn player or give old player back
-            //if spawn player then choose spawn location
+            photonView.RPC(INITIALIZE_PLAYER, RpcTarget.MasterClient);
         }
     }
 
@@ -85,6 +85,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
         else
         {
+            photonView.RPC(SPAWN_PLAYER, RpcTarget.MasterClient);
             newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
         }
     }
