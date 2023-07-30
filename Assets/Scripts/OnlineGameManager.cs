@@ -96,22 +96,25 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
         if (isReturningPlayer)
         {
-            foreach (PhotonView photonView in PhotonNetwork.PhotonViewCollection)
+            foreach (PhotonView view in PhotonNetwork.PhotonViewCollection)
             {
-                print($"checking view: {photonView}");
-                if (photonView.Owner.ActorNumber == oldPlayer.ActorNumber)
+                print($"checking view: {view}");
+                if (view.OwnerActorNr == oldPlayer.ActorNumber)
                 {
-                    print($"transfered view: {photonView} to new player");
-                    photonView.TransferOwnership(newPlayer);
+                    print($"transfered view: {view} to new player");
+                    view.TransferOwnership(newPlayer);
                     //transfer all properties?
                 }
             }
+            print("new player Customprpties: \n" + newPlayer.CustomProperties.ToString());
             newPlayer.SetCustomProperties(oldPlayer.CustomProperties);
+            print("old player Customprpties: \n" + newPlayer.CustomProperties.ToString());
             photonView.RPC(SET_PLAYER_CONTROLLER, newPlayer);
         }
         else
         {
             newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
+            print(newPlayer.CustomProperties.ToString());
 
             int rnd = Random.Range(0, spawnPoints.Length);
             while (spawnPoints[rnd].isTaken == true)
@@ -166,8 +169,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         foreach (PlayerController playerController in playerControllers)
         {
-            if (playerController.photonView.Owner.ActorNumber
-                == PhotonNetwork.LocalPlayer.ActorNumber)
+            if (playerController.photonView.OwnerActorNr == PhotonNetwork.LocalPlayer.ActorNumber)
             {
                 print("set controller of returning player");
                 localPlayerController = playerController;
@@ -231,7 +233,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     #endregion
 
-    public void SetPlayerController(PlayerController newLocalController)
+    public void SetPlayerControllerLocally(PlayerController newLocalController)
     {
         localPlayerController = newLocalController;
     }
@@ -264,13 +266,23 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
+
+        print($"{otherPlayer.NickName} left room, isInactive: {otherPlayer.IsInactive}");
+
         if (otherPlayer.IsInactive)
         {
             //player can still return
+            print("if is inactive, u can see this");
+            print($"{otherPlayer}");
+            foreach(var view in PhotonNetwork.PhotonViewCollection)
+            {
+
+            }
         }
         else
         {
             //player ded
+            print("if is not inactive (meaning completely gone), u can see this");
         }
     }
 
