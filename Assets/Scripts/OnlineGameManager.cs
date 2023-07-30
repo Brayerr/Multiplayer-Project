@@ -111,12 +111,12 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         else
         {
             newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
-            photonView.RPC(ASK_FOR_SPAWN, RpcTarget.MasterClient);
+            photonView.RPC(ASK_FOR_SPAWN, RpcTarget.MasterClient, info.Sender.ActorNumber);
         }
     }
 
     [PunRPC]
-    public void AskForSpawnPoint(PhotonMessageInfo photonMessageInfo)
+    public void AskForSpawnPoint(PhotonMessageInfo photonMessageInfo, int actorNum)
     {
         int rnd = Random.Range(0, spawnPoints.Length);
         while (spawnPoints[rnd].isTaken == true)
