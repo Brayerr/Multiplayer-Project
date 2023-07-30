@@ -342,8 +342,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2042525723}
   - component: {fileID: 2042525724}
-  - component: {fileID: 4114985258597553321}
-  - component: {fileID: 7656724769265379439}
+  - component: {fileID: 900768706734094088}
+  - component: {fileID: 846814732153885416}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -390,7 +390,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &4114985258597553321
+--- !u!114 &900768706734094088
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -409,11 +409,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 7656724769265379439}
+  - {fileID: 846814732153885416}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &7656724769265379439
+--- !u!114 &846814732153885416
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 874379289399165736}
   - component: {fileID: 2588245086304046199}
   m_Layer: 0
-  m_Name: playerPrefab 0
+  m_Name: playerPrefab1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -623,8 +623,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2003298663356072888}
-  - component: {fileID: 6004387573815852305}
-  - component: {fileID: 2686556180776697540}
+  - component: {fileID: 2335513882097714484}
+  - component: {fileID: 2777425589823426945}
   m_Layer: 0
   m_Name: Orientation
   m_TagString: Untagged
@@ -649,7 +649,7 @@ Transform:
   m_Father: {fileID: 2003298663039400178}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6004387573815852305
+--- !u!114 &2335513882097714484
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -668,12 +668,12 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 2686556180776697540}
-  - {fileID: 7656724769265379439}
+  - {fileID: 2777425589823426945}
+  - {fileID: 846814732153885416}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &2686556180776697540
+--- !u!114 &2777425589823426945
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -782,7 +782,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 927e686f28061974f90dc2506d078594, type: 2}
+  - {fileID: 2100000, guid: d82a1534c2d6d26498b08afec484663b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
