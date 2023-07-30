@@ -8,6 +8,7 @@ public class MoveArrow : MonoBehaviourPun
 {   
     float arrowForce = 2000;
     [SerializeField] Rigidbody rb;
+    public float actorNum;
 
     private void Start()
     {
@@ -19,7 +20,12 @@ public class MoveArrow : MonoBehaviourPun
         if (PhotonNetwork.IsMasterClient)
         {
             Vector3 hitPoint = collision.GetContact(0).point;
-            PhotonNetwork.Instantiate("Explosion", hitPoint, new Quaternion(0, 0, transform.eulerAngles.z, 0));
+            var go = PhotonNetwork.Instantiate("Explosion", hitPoint, Quaternion.identity);
+            if (go.TryGetComponent<Explosion>(out Explosion explosion))
+            {
+                explosion.actorNum = actorNum;
+                print($"explosion actor num is {explosion.actorNum}");
+            }
             Debug.Log("hit");
         }
             Destroy(gameObject);
