@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0376eb4ed6a34843b6234bcba39d7da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 0}
   sensX: 400
   sensY: 400
   orientation: {fileID: 0}
@@ -140,7 +141,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540986959845022452}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a14abf6e416b5df43a8e489ef63d192a, type: 3}
   m_Name: 

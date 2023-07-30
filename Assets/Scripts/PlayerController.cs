@@ -4,17 +4,21 @@ using UnityEngine;
 using System;
 using Photon.Pun;
 
-public class PlayerController : MonoBehaviourPunCallbacks
+public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
+    [Header("Attributes")]
+    [SerializeField] int maxHP = 3;
+    [SerializeField] public int currentHP;
+    [SerializeField] public int ID;
+
     [Header("Movement")]
     public float moveSpeed;
-
     public float groundDrag;
-
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
+    System.Random random;
 
     [HideInInspector] public float walkSpeed;
     [HideInInspector] public float sprintSpeed;
@@ -48,13 +52,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     Rigidbody rb;
 
+    public Transform cameraPos;
+    public MoveCamera moveCam;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         anim = GetComponentInChildren<Animator>();
-
         readyToJump = true;
+        currentHP = maxHP;
+        random = new System.Random();
+        if (photonView.IsMine) moveCam.cameraPosition.position = cameraPos.position;
     }
 
     private void Update()
@@ -83,7 +92,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if (photonView.IsMine) MovePlayer();
     }
 
     public Transform GetOrientation() => orientation;
@@ -159,10 +168,25 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void ShootArrow()
     {
-        MoveArrow shot = Instantiate(arrow, shootingPosition.position, Quaternion.identity);
+        var shot = PhotonNetwork.Instantiate("Arrow", shootingPosition.position, Quaternion.identity);
         shot.transform.Rotate(orientation.transform.eulerAngles);
-        
+    }
 
+    public void TakeDamage()
+    {
+        currentHP--;
+    }
+
+    public void Respawn()
+    {
+        rb.velocity = Vector3.zero;
+        transform.position = new Vector3(random.Next(0, 5), random.Next(0, 5), 1);
+    }
+
+    public void KillPlayer()
+    {
+        photonView.RPC("RemovePlayer", RpcTarget.MasterClient, ID);
+        print($"removed player {ID} from game");
     }
 
     #region Animations
@@ -182,4 +206,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
         else anim.SetBool("isWalking", false);
     }
     #endregion
+
+
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (info.photonView.IsMine)
+        {
+            OnlineGameManager.Instance.SetPlayerController(this);
+            OnlineGameManager.Instance.AddPlayerController(this);
+        }
+    }
 }

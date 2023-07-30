@@ -1,14 +1,12 @@
-using System.Collections;
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-public class PlayerCam : MonoBehaviour
+public class PlayerCam : MonoBehaviourPun
 {
-    [SerializeField] GameObject playerPrefab;
-
-    [SerializeField]float sensX;
-    [SerializeField]float sensY;
+    [SerializeField] PlayerController control;
+    [SerializeField] float sensX;
+    [SerializeField] float sensY;
 
     [SerializeField] Transform orientation;
 
@@ -17,14 +15,15 @@ public class PlayerCam : MonoBehaviour
 
     private void Start()
     {
+        OnlineGameManager.Instance.SetPlayerCam(this);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        GameObject go = PhotonNetwork.Instantiate($"PlayerPrefab/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}",Vector3.zero,transform.rotation);
-        if (go.TryGetComponent<PlayerController>(out PlayerController control))
-        {
-            orientation = control.orientation;
-        }
+        //GameObject go = PhotonNetwork.Instantiate($"PlayerPrefab/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}",Vector3.zero,transform.rotation);
+        //if (go.TryGetComponent<PlayerController>(out PlayerController control))
+        //{
+        //    orientation = control.orientation;
+        //}
     }
 
     private void Update()
@@ -41,5 +40,11 @@ public class PlayerCam : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+    }
+
+
+    public void SetOrientation(Transform orientation)
+    {
+        this.orientation = orientation;
     }
 }
