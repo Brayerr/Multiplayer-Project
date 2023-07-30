@@ -134,7 +134,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine)
         {
-            photonView.RPC("RemovePlayer", RpcTarget.MasterClient);
+            photonView.RPC("RemovePlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
             print("activating remove RPC");
         }
     }
@@ -146,12 +146,12 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void RemovePlayer(PhotonMessageInfo info)
+    public void RemovePlayer(int actorNum)
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            activePlayers.Remove(info.Sender.ActorNumber);
-            print($"removed player {info.Sender.ActorNumber}");
+            activePlayers.Remove(actorNum);
+            print($"removed player {actorNum}");
             if (activePlayers.Count <= 1) EndGameLoop();
         }
     }
