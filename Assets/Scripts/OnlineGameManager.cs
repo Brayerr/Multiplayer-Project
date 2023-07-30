@@ -31,6 +31,10 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         {
             photonView.RPC(INITIALIZE_PLAYER, RpcTarget.MasterClient);
         }
+        else
+        {
+            print("lol");
+        }
     }
 
 
