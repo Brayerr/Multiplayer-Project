@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
+    public PlayerNameLookAt lookAt;
 
     [Header("Movement")]
     public float moveSpeed;

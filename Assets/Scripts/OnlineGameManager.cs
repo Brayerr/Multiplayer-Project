@@ -31,6 +31,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         PlayerController.PlayerDied += AskToRemovePlayer;
 
         GameObject go;
+        PlayerController pc;
 
         if (PhotonNetwork.IsConnectedAndReady)
         {
@@ -40,14 +41,18 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
                 int characterskindID = Random.Range(0, 6);
 
                 go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{characterskindID}", new Vector3(0, 3, -8), transform.rotation);
+
                 localPlayerCam.SetOrientation(localPlayerController.orientation);
+                localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
                 photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
                 return;
             }
 
             go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
 
+
             localPlayerCam.SetOrientation(localPlayerController.orientation);
+            localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
             photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
