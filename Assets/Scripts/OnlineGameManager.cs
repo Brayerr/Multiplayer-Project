@@ -16,7 +16,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private const string SET_PLAYER_CONTROLLER = nameof(SetPlayerController);
     private const string INITIALIZE_PLAYER = nameof(InitializePlayer);
     private const string SPAWN_PLAYER = nameof(SpawnPlayer);
-    private const string ASK_FOR_SPAWN = nameof(AskForSpawnPoint);
+//    private const string ASK_FOR_SPAWN = nameof(AskForSpawnPoint);
 
     [SerializeField] private List<int> activePlayers = new List<int>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
@@ -43,7 +43,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             photonView.RPC(INITIALIZE_PLAYER, RpcTarget.MasterClient);
 
 
-            
+
 
             //go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
 
@@ -111,21 +111,28 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         else
         {
             newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
-            photonView.RPC(ASK_FOR_SPAWN, RpcTarget.MasterClient, info.Sender.ActorNumber);
+
+            int rnd = Random.Range(0, spawnPoints.Length);
+            while (spawnPoints[rnd].isTaken == true)
+            {
+                rnd = (rnd + 1) % spawnPoints.Length;
+            }
+            spawnPoints[rnd].isTaken = true;
+            photonView.RPC(SPAWN_PLAYER, info.Sender, rnd);
         }
     }
 
-    [PunRPC]
-    public void AskForSpawnPoint(PhotonMessageInfo photonMessageInfo, int actorNum)
-    {
-        int rnd = Random.Range(0, spawnPoints.Length);
-        while (spawnPoints[rnd].isTaken == true)
-        {
-            rnd = (rnd + 1) % spawnPoints.Length;
-        }
-        spawnPoints[rnd].isTaken = true;
-        photonView.RPC(SPAWN_PLAYER, photonMessageInfo.Sender, rnd);
-    }
+    //[PunRPC]
+    //public void AskForSpawnPoint(PhotonMessageInfo photonMessageInfo)
+    //{
+    //    int rnd = Random.Range(0, spawnPoints.Length);
+    //    while (spawnPoints[rnd].isTaken == true)
+    //    {
+    //        rnd = (rnd + 1) % spawnPoints.Length;
+    //    }
+    //    spawnPoints[rnd].isTaken = true;
+    //    photonView.RPC(SPAWN_PLAYER, photonMessageInfo.Sender, rnd);
+    //}
 
     [PunRPC]
     public void SpawnPlayer(int i)
@@ -189,7 +196,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void AddPlayer(int actorNum , PhotonMessageInfo info)
+    public void AddPlayer(int actorNum, PhotonMessageInfo info)
     {
         Debug.Log($"{nameof(AddPlayer)}, msgInfonum {info.Sender.ActorNumber}, actornum {actorNum}");
         if (PhotonNetwork.IsMasterClient) activePlayers.Add(info.Sender.ActorNumber);
@@ -229,7 +236,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
-        if(otherPlayer.IsInactive)
+        if (otherPlayer.IsInactive)
         {
             //player can still return
         }
