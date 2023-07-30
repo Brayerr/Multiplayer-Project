@@ -32,31 +32,20 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
         PlayerController.PlayerDied += AskToRemovePlayer;
 
-        GameObject go;
         PlayerController pc;
 
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            if (PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY] == null)
-            {
-                Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} joined the game mid session, giving random skin"); // Player entered the room without a skin (probably mid-game)
-                int characterskindID = Random.Range(0, 6);
-
-                go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{characterskindID}", new Vector3(0, 3, -8), transform.rotation);
-
-                localPlayerCam.SetOrientation(localPlayerController.orientation);
-                localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
-                photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
-                return;
-            }
-
-            go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
-
-
-            localPlayerCam.SetOrientation(localPlayerController.orientation);
-            localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
-            photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
             photonView.RPC(INITIALIZE_PLAYER, RpcTarget.MasterClient);
+
+            
+
+            //go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
+
+
+            //localPlayerCam.SetOrientation(localPlayerController.orientation);
+            //localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
+            //photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
         }
         else
         {
@@ -75,7 +64,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        base.OnPlayerEnteredRoom(newPlayer);
+        //base.OnPlayerEnteredRoom(newPlayer);
 
         bool isReturningPlayer = false;
         Player oldPlayer = null;
@@ -103,18 +92,21 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         {
             foreach (PhotonView photonView in PhotonNetwork.PhotonViewCollection)
             {
+                print($"checking view: {photonView}");
                 if (photonView.Owner.ActorNumber == oldPlayer.ActorNumber)
                 {
+                    print($"transfered view: {photonView} to new player");
                     photonView.TransferOwnership(newPlayer);
+                    //transfer all properties?
                 }
             }
-
+            newPlayer.SetCustomProperties(oldPlayer.CustomProperties);
             photonView.RPC(SET_PLAYER_CONTROLLER, newPlayer);
-
         }
         else
         {
-            if(info.Sender.ActorNumber == newPlayer.ActorNumber)
+
+            if (info.Sender.ActorNumber == newPlayer.ActorNumber)
             {
                 newPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_INITIALIZED_KEY, true } });
                 photonView.RPC(SPAWN_PLAYER, newPlayer);
@@ -125,9 +117,27 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void SpawnPlayer()
     {
-        GameObject go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
+        GameObject go;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY] == null)
+        {
+
+            Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} joined the game mid session, giving random skin"); // Player entered the room without a skin (probably mid-game)
+            int characterskindID = Random.Range(0, 6);
+
+            go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{characterskindID}", new Vector3(0, 3, -8), transform.rotation);
+
+            return;
+        }
+        else
+        {
+            go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
+        }
+
 
         localPlayerCam.SetOrientation(localPlayerController.orientation);
+        localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
+        photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
 
@@ -136,10 +146,12 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         foreach (PlayerController playerController in playerControllers)
         {
-            if (playerController.photonView.Controller.ActorNumber
+            if (playerController.photonView.Owner.ActorNumber
                 == PhotonNetwork.LocalPlayer.ActorNumber)
             {
+                print("set controller of returning player");
                 localPlayerController = playerController;
+                localPlayerCam.SetOrientation(localPlayerController.orientation);
                 break;
             }
         }
