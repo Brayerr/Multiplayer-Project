@@ -48,8 +48,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         {
             photonView.RPC(INITIALIZE_PLAYER, RpcTarget.MasterClient);
 
-            InitializeRoomPlayerControllers();
-
 
             //go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
 
