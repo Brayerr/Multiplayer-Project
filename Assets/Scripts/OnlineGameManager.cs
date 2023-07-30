@@ -7,6 +7,9 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
 using Random = UnityEngine.Random;
+using Unity.VisualScripting;
+using System.Linq;
+using Photon.Pun.UtilityScripts;
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
 {
@@ -27,6 +30,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     [SerializeField] SpawnPoint[] spawnPoints;
     int playersInitialized = 0;
 
+    public event System.Action<int> PlayerInitialized;
+
     private void Awake()
     {
         Instance = this;
@@ -43,7 +48,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         {
             photonView.RPC(INITIALIZE_PLAYER, RpcTarget.MasterClient);
 
-
+            InitializeRoomPlayerControllers();
 
 
             //go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
@@ -56,6 +61,20 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         else
         {
             print("lol");
+        }
+    }
+
+    public void InitializeRoomPlayerControllers()
+    {
+        if (!PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(Constants.ROOM_PLAYER_CONTROLLERS))
+        {
+            // Create a new list of PlayerControllers for the new player
+            PlayerController[] newPlayerControllers = new PlayerController[0];
+
+            // Set the custom room property for the new player
+            Hashtable customProperties = new Hashtable();
+            customProperties[Constants.ROOM_PLAYER_CONTROLLERS] = newPlayerControllers;
+            PhotonNetwork.CurrentRoom.SetCustomProperties(customProperties);
         }
     }
 
@@ -96,20 +115,22 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
         if (isReturningPlayer)
         {
+            print("old player actor num: " + oldPlayer.ActorNumber);
+            print("new player actor num: " + newPlayer.ActorNumber);
+
             foreach (PhotonView view in PhotonNetwork.PhotonViewCollection)
             {
-                print($"checking view: {view}");
                 if (view.OwnerActorNr == oldPlayer.ActorNumber)
                 {
-                    print($"transfered view: {view} to new player");
+                    print($"transfered view: {view} with AcNum: {view.OwnerActorNr} to new player");
                     view.TransferOwnership(newPlayer);
                     //transfer all properties?
                 }
             }
-            print("new player Customprpties: \n" + newPlayer.CustomProperties.ToString());
             newPlayer.SetCustomProperties(oldPlayer.CustomProperties);
-            print("old player Customprpties: \n" + newPlayer.CustomProperties.ToString());
-            photonView.RPC(SET_PLAYER_CONTROLLER, newPlayer);
+            PlayerInitialized.Invoke(oldPlayer.ActorNumber);
+            //photonView.RPC(SET_PLAYER_CONTROLLER, newPlayer);
+            localPlayerCam.SetOrientation(localPlayerController.orientation);
         }
         else
         {
@@ -244,10 +265,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         localPlayerCam = newPlayerCam;
     }
 
-    public void AddPlayerController(PlayerController playerController)
-    {
-        playerControllers.Add(playerController);
-    }
 
     public void AskToRemovePlayer()
     {
@@ -273,11 +290,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         {
             //player can still return
             print("if is inactive, u can see this");
-            print($"{otherPlayer}");
-            foreach(var view in PhotonNetwork.PhotonViewCollection)
-            {
-
-            }
         }
         else
         {
@@ -299,4 +311,5 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         string spawnData = JsonUtility.ToJson(spawnPoints);
         photonView.RPC(UPDATE_SPAWN_POINTS, RpcTarget.All, spawnData);
     }
+
 }

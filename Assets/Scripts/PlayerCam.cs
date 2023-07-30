@@ -14,6 +14,7 @@ public class PlayerCam : MonoBehaviourPun
 
     private void Start()
     {
+        OnlineGameManager.Instance.PlayerInitialized += SendPlayerCam;
         OnlineGameManager.Instance.SetPlayerCam(this);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -44,5 +45,13 @@ public class PlayerCam : MonoBehaviourPun
     {
         print("called set orientation");
         this.orientation = orientation;
+    }
+
+    public void SendPlayerCam(int oldActorNumber)
+    {
+        if(oldActorNumber == photonView.CreatorActorNr)
+        {
+            OnlineGameManager.Instance.SetPlayerCam(this);
+        }
     }
 }

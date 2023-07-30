@@ -4,12 +4,17 @@ using UnityEngine;
 
 public static class Constants
 {
+    //ROOM
+    public const string ROOM_EVERYONE_READY_KEY = "RoomEveryoneReady";
+    public const string ROOM_PLAYER_CONTROLLERS = "PlayerControllers";
+
+
+    //PLAYER
     public const string PLAYER_TAG = "Player";
     public const string ARROW_TAG = "Arrow";
     public const string END_GAME_RPC = "EndGameRPC";
     public const string PLAYER_CHARACTER_ID_PROPERTY_KEY = "PlayerCharacterID";
     public const string PLAYER_READY_PROPERTY_KEY = "PlayerReady";
-    public const string ROOM_EVERYONE_READY_KEY = "RoomEveryoneReady";
     public const string PLAYER_INITIALIZED_KEY = "PlayerInitialized";
 
     public const string USER_UNIQUE_ID = "UserUniqueID";
