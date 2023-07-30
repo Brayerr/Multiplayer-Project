@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerCam : MonoBehaviourPun
 {
-    [SerializeField] PlayerController control;
     [SerializeField] float sensX;
     [SerializeField] float sensY;
 
@@ -18,16 +17,14 @@ public class PlayerCam : MonoBehaviourPun
         OnlineGameManager.Instance.SetPlayerCam(this);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        //GameObject go = PhotonNetwork.Instantiate($"PlayerPrefab/playerPrefab {PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}",Vector3.zero,transform.rotation);
-        //if (go.TryGetComponent<PlayerController>(out PlayerController control))
-        //{
-        //    orientation = control.orientation;
-        //}
     }
 
     private void Update()
     {
+        if(orientation == null)
+        {
+            return;
+        }
         transform.position = orientation.position;
 
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
@@ -45,6 +42,7 @@ public class PlayerCam : MonoBehaviourPun
 
     public void SetOrientation(Transform orientation)
     {
+        print("called set orientation");
         this.orientation = orientation;
     }
 }

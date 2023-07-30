@@ -6,10 +6,12 @@ using Photon.Pun;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
+    public static event Action PlayerDied;
+
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
-    [SerializeField] public int ID;
+    public PlayerNameLookAt lookAt;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -48,12 +50,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     float verticalInput;
 
     Vector3 moveDirection;
-    Vector3 moveDirectionHolder = Vector3.zero;
 
     Rigidbody rb;
 
-    public Transform cameraPos;
-    public MoveCamera moveCam;
+    public int spawnPoint { get; private set; }
 
     private void Start()
     {
@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
         readyToJump = true;
         currentHP = maxHP;
         random = new System.Random();
-        //if (photonView.IsMine) moveCam.cameraPosition.position = cameraPos.position;
+        
     }
 
     private void Update()
@@ -183,12 +183,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
         transform.position = new Vector3(random.Next(0, 5), random.Next(0, 5), 1);
     }
 
-    public void KillPlayer()
-    {
-        photonView.RPC("RemovePlayer", RpcTarget.MasterClient, ID);
-        print($"removed player {ID} from game");
-    }
-
     #region Animations
     void TriggerShoot()
     {
@@ -215,5 +209,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
             OnlineGameManager.Instance.SetPlayerController(this);
             OnlineGameManager.Instance.AddPlayerController(this);
         }
+    }
+
+    public void SetSpawn(int spawnID)
+    {
+        spawnPoint = spawnID;
     }
 }

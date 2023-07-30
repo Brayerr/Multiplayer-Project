@@ -17,7 +17,7 @@ MonoBehaviour:
     AppIdFusion: 
     AppIdChat: 
     AppIdVoice: 
-    AppVersion: 0.1
+    AppVersion: 0.12
     UseNameServer: 1
     FixedRegion: eu
     Server: 
@@ -54,6 +54,9 @@ MonoBehaviour:
   - PlayerDiedRPC
   - RemovePlayer
   - AddPlayer
+  - SpawnPlayer
+  - AskForSpawnPoint
+  - RespawnPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

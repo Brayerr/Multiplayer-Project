@@ -134,7 +134,7 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     {
         byte roomMax = (byte)int.Parse(maxPlayerSlider.value.ToString());
         int emptyRoomTtl = int.Parse(timeToDisconnectSlider.value.ToString());
-        PhotonNetwork.CreateRoom(chooseRoomInputField.text, new RoomOptions() { MaxPlayers = roomMax, EmptyRoomTtl = emptyRoomTtl }, null);
+        PhotonNetwork.CreateRoom(chooseRoomInputField.text, new RoomOptions() { MaxPlayers = roomMax, PlayerTtl = 30000,  EmptyRoomTtl = emptyRoomTtl, CleanupCacheOnLeave = false }, null);
         createRoomButton.interactable = false;
     }
 
@@ -184,21 +184,16 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         base.OnConnectedToMaster();
         if (masterStatus != null)
         {
+            SetUsersUniqueID();
             masterStatus.color = Color.green;
             masterStatus.text = "Connected to Master";
             PhotonNetwork.EnableCloseConnection = true;
             PhotonNetwork.JoinLobby();
             PlayerCustomPropPing();
-            
         }
     }
 
-    private void SetUsersUniqueID()
-    {
-        Hashtable hashtable = new Hashtable();
-        hashtable.Add(Constants.USER_UNIQUE_ID, SystemInfo.deviceUniqueIdentifier);
-        PhotonNetwork.SetPlayerCustomProperties(hashtable);
-    }
+    
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -564,6 +559,13 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         {
             photonView.RPC(Constants.LOAD_GAME_NAME, RpcTarget.AllBuffered);
         }
+    }
+
+    private void SetUsersUniqueID()
+    {
+        Hashtable hashtable = new Hashtable();
+        hashtable.Add(Constants.USER_UNIQUE_ID, SystemInfo.deviceUniqueIdentifier);
+        PhotonNetwork.SetPlayerCustomProperties(hashtable);
     }
 
     private static void PlayerCustomPropPing()
