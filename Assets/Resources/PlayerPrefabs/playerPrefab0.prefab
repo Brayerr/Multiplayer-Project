@@ -406,7 +406,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 7656724769265379439}
@@ -542,6 +542,7 @@ MonoBehaviour:
   maxHP: 3
   currentHP: 0
   lookAt: {fileID: 9129902590934335281}
+  lastActorHit: 0
   moveSpeed: 12
   groundDrag: 5
   jumpForce: 12
@@ -664,11 +665,10 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 2686556180776697540}
-  - {fileID: 7656724769265379439}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
