@@ -8,7 +8,7 @@ public class OnlineScoreManager : MonoBehaviourPun
 {
     public static OnlineScoreManager Instance { get; private set; }
 
-    [SerializeField] GameObject scoreboard;
+    [SerializeField] public GameObject scoreboard;
     [SerializeField] GameObject playerCell;
 
     [SerializeField] List<PlayerScoreCell> scoreCells = new List<PlayerScoreCell>();
