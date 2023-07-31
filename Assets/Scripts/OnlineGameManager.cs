@@ -326,6 +326,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             spawnPoints[i].isTaken = data[i];
         }
     }
+
+    private void OnDestroy()
+    {
+        Shredder.OnPlayerDeath -= Respawn;
+    }
 }
 
 public class SpawnPointArray
