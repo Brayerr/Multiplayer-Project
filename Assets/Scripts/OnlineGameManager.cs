@@ -220,7 +220,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void UpdateSpawnPoints(string data)
     {
         SpawnPointArray spawnData = JsonUtility.FromJson<SpawnPointArray>(data);
-        Array.Copy(spawnData.ToArray(), spawnPoints, spawnPoints.Length);
+        print(data);
+        Array.Copy(spawnData.ToSpawnPointArray(), spawnPoints, spawnPoints.Length);
         foreach (SpawnPoint spawnPoint in spawnPoints)
         {
             print(spawnPoint.isTaken);
@@ -305,16 +306,24 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
 public class SpawnPointArray
 {
-    public SpawnPoint[] points;
+    public bool[] points;
 
     public SpawnPointArray(SpawnPoint[] array)
     {
-        points = new SpawnPoint[array.Length];
-        Array.Copy(array, points, points.Length);
+        points = new bool[array.Length];
+        for (int i = 0; i < array.Length; i++)
+        {
+            points[i] = array[i].isTaken;
+        }
     }
 
-    public SpawnPoint[] ToArray()
+    public SpawnPoint[] ToSpawnPointArray()
     {
-        return points;
+        SpawnPoint[] returnArray = new SpawnPoint[points.Length];
+        for (int i = 0; i < points.Length; i++)
+        {
+            returnArray[i].isTaken = points[i];
+        }
+        return returnArray;
     }
 }
