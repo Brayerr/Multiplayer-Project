@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         if (photonView.AmOwner)
         {
-            
+
 
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
@@ -187,7 +187,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
         {
             PhotonView pv = shot.GetPhotonView();
             //arrow.actorNum = pv.OwnerActorNr;
-            arrow.photonView.RPC(arrow.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.MasterClient, pv.OwnerActorNr);
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                arrow.photonView.RPC(arrow.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.MasterClient, pv.OwnerActorNr);
+            }
+            else
+            {
+                arrow.photonView.RPC(arrow.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.All, pv.OwnerActorNr);
+            }
             print($"arrow actornum is {arrow.actorNum}");
         }
     }
