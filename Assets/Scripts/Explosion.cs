@@ -37,8 +37,6 @@ public class Explosion : MonoBehaviourPunCallbacks
                 conroller.lastActorHit = actorNum;
                 print($"player last hit by actor number {conroller.lastActorHit}");
             }
-
-            Debug.Log("boom");
         }
     }
 

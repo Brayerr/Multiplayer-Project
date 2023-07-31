@@ -26,7 +26,10 @@ public class MoveArrow : MonoBehaviourPun
                 explosion.actorNum = actorNum;
                 print($"explosion actor num is {explosion.actorNum}");
             }
-            Debug.Log("hit");
+            else
+            {
+                print("coudent get player controller component");
+            }
         }
             Destroy(gameObject);
     }
