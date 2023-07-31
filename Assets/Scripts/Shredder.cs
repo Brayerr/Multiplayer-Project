@@ -21,14 +21,17 @@ public class Shredder : MonoBehaviourPun
             var pc = other.GetComponent<PlayerController>();
             if (pc.currentHP > 0)
             {
-                if (pc.photonView.OwnerActorNr == pc.lastActorHit)
+                if (pc.photonView.IsMine)
                 {
-                    OnlineScoreManager.Instance.photonView.RPC("UpdatePlayerDeaths", RpcTarget.MasterClient, pc.photonView.OwnerActorNr, 1);
-                }
-                else
-                {
-                    OnlineScoreManager.Instance.photonView.RPC("UpdatePlayerKills", RpcTarget.MasterClient, pc.lastActorHit, 1);
-                    OnlineScoreManager.Instance.photonView.RPC("UpdatePlayerDeaths", RpcTarget.MasterClient, pc.photonView.OwnerActorNr, 1);
+                    if (pc.photonView.OwnerActorNr == pc.lastActorHit)
+                    {
+                        OnlineScoreManager.Instance.photonView.RPC("UpdatePlayerDeaths", RpcTarget.MasterClient, pc.photonView.OwnerActorNr, 1);
+                    }
+                    else
+                    {
+                        OnlineScoreManager.Instance.photonView.RPC("UpdatePlayerKills", RpcTarget.MasterClient, pc.lastActorHit, 1);
+                        OnlineScoreManager.Instance.photonView.RPC("UpdatePlayerDeaths", RpcTarget.MasterClient, pc.photonView.OwnerActorNr, 1);
+                    }
                 }
 
                 pc.TakeDamage();
