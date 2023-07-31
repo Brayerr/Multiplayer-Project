@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
     public PlayerNameLookAt lookAt;
-    public float lastActorHit;
+    public int lastActorHit;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -197,7 +197,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     public void Respawn()
     {
         rb.velocity = Vector3.zero;
-        transform.position = new Vector3(random.Next(0, 5), random.Next(0, 5), 1);
+        transform.position = new Vector3(random.Next(0, 5), random.Next(0, 5), 2);
     }
 
     #region Animations

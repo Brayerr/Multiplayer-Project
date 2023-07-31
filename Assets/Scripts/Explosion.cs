@@ -11,7 +11,7 @@ public class Explosion : MonoBehaviourPunCallbacks
     Transform pickedVfxTransform;
 
     GameObject vfxGameObject;
-    public float actorNum;
+    public int actorNum;
     string vfxName;
     // Start is called before the first frame update
     void Start()

@@ -8,7 +8,7 @@ public class MoveArrow : MonoBehaviourPun
 {   
     float arrowForce = 2000;
     [SerializeField] Rigidbody rb;
-    public float actorNum;
+    public int actorNum;
 
     private void Start()
     {
