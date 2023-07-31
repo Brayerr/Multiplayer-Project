@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 using Unity.VisualScripting;
 using System.Linq;
 using Photon.Pun.UtilityScripts;
+using System;
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
 {
@@ -219,7 +220,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void UpdateSpawnPoints(string data)
     {
         SpawnPointArray spawnData = JsonUtility.FromJson<SpawnPointArray>(data);
-        spawnPoints = spawnData.ToArray();
+        Array.Copy(spawnData.ToArray(), spawnPoints, spawnPoints.Length);
         foreach (SpawnPoint spawnPoint in spawnPoints)
         {
             print(spawnPoint.isTaken);
@@ -308,7 +309,8 @@ public class SpawnPointArray
 
     public SpawnPointArray(SpawnPoint[] array)
     {
-        points = array;
+        points = new SpawnPoint[array.Length];
+        Array.Copy(array, points, points.Length);
     }
 
     public SpawnPoint[] ToArray()
