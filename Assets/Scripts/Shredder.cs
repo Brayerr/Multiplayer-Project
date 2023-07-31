@@ -4,9 +4,12 @@ using UnityEngine;
 using Photon.Pun;
 using System;
 using Photon.Realtime;
+using Photon.Pun.Demo.PunBasics;
 
 public class Shredder : MonoBehaviourPun
 {
+    [SerializeField] Transform CameraLock;
+
     public static event Action<Player> OnPlayerDeath;
 
     private void OnTriggerExit(Collider other)
@@ -50,5 +53,24 @@ public class Shredder : MonoBehaviourPun
             }
 
         }
+
+
+    }
+
+    public void CheckPlayerToLookAt(Collider other)
+    {
+        // Arena Look
+        OnlineGameManager.Instance.GetPlayerCamera().SetOrientation(CameraLock);
+        
+
+        // Player Kill Cam
+#if false
+        foreach (var lookAtView in PhotonNetwork.PhotonViews)
+        {
+            
+
+        }
+
+#endif  
     }
 }

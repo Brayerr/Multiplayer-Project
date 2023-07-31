@@ -3312,6 +3312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 642b378d5eb5fec47bbefc7a77f44835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CameraLock: {fileID: 1092257276}
 --- !u!1 &1620625590
 GameObject:
   m_ObjectHideFlags: 0
@@ -3342,7 +3343,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d6c4c5ef233c814b87d163902e161e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraLock: {fileID: 1092257276}
   activePlayers: 
   spawnPoints:
   - {fileID: 524837763}
