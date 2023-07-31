@@ -186,7 +186,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
         if (shot.TryGetComponent<MoveArrow>(out MoveArrow arrow))
         {
             PhotonView pv = shot.GetPhotonView();
-            arrow.actorNum = pv.OwnerActorNr;
+            //arrow.actorNum = pv.OwnerActorNr;
+            arrow.photonView.RPC(arrow.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.MasterClient, pv.OwnerActorNr);
             print($"arrow actornum is {arrow.actorNum}");
         }
     }
@@ -242,4 +243,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
             OnlineGameManager.Instance.SetPlayerControllerLocally(this);
         }
     }
+
+
 }

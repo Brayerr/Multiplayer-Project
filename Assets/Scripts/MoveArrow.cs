@@ -5,7 +5,9 @@ using System;
 using Photon.Pun;
 
 public class MoveArrow : MonoBehaviourPun
-{   
+{
+    public string UPDATE_EXPLOSION_ACTOR_NUM = nameof(UpdateActorNum);
+
     float arrowForce = 2000;
     [SerializeField] Rigidbody rb;
     public int actorNum;
@@ -41,5 +43,9 @@ public class MoveArrow : MonoBehaviourPun
         rb.AddForce(transform.forward * arrowForce);
     }
 
-
+    [PunRPC]
+    public void UpdateActorNum(int newAcNum)
+    {
+        actorNum = newAcNum;
+    }
 }
