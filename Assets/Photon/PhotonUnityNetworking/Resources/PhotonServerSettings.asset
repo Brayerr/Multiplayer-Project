@@ -61,6 +61,11 @@ MonoBehaviour:
   - UpdateSpawnPoints
   - UpdateScoreBoard
   - UpdateScoreboard
+  - UpdateActorNum
+  - UpdatePlayerDeaths
+  - UpdatePlayerKills
+  - RespawnPlayerRPC
+  - UpdateSpawnPointsRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

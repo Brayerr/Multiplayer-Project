@@ -212,6 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2937a53139fa95745a57039a1027e290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UPDATE_ARROW_ACTOR_NUM: UpdateActorNum
   rb: {fileID: 4059417116633964975}
   actorNum: 0
 --- !u!54 &4059417116633964975

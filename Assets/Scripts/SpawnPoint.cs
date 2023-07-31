@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpawnPoint : MonoBehaviour
 {
-    public int ID { get; private set; }
+    public int ID;
     public bool isTaken;
 
     public void AssignID(int id)

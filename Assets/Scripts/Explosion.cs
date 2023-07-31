@@ -6,12 +6,14 @@ using DG.Tweening;
 
 public class Explosion : MonoBehaviourPunCallbacks
 {
+    public string UPDATE_EXPLOSION_ACTOR_NUM = nameof(UpdateActorNum);
+
     [SerializeField] List<GameObject> VFXs;
 
     Transform pickedVfxTransform;
 
     GameObject vfxGameObject;
-    public float actorNum;
+    public int actorNum;
     string vfxName;
     // Start is called before the first frame update
     void Start()
@@ -20,10 +22,13 @@ public class Explosion : MonoBehaviourPunCallbacks
         vfxName = vfxGameObject.name;
         vfxGameObject = PhotonNetwork.Instantiate("VFX/" + vfxName, transform.position, transform.rotation);
         pickedVfxTransform = vfxGameObject.transform;
+        Destroy(gameObject, 5f);
 
 
         Explode(transform.position);
     }
+
+
 
     void Explode(Vector3 hitPoint)
     {
@@ -34,11 +39,13 @@ public class Explosion : MonoBehaviourPunCallbacks
             hitCollider.attachedRigidbody?.AddForce((hitPoint - hitCollider.transform.position).normalized * -20, ForceMode.Impulse);
             if (hitCollider.gameObject.TryGetComponent(out PlayerController conroller))
             {
-                conroller.lastActorHit = actorNum;
+                if(PhotonNetwork.IsMasterClient)
+                {
+                    conroller.photonView.RPC(conroller.UPDATE_PLAYER_ACTOR_HIT, RpcTarget.All, actorNum);
+                }
+                //conroller.lastActorHit = actorNum;
                 print($"player last hit by actor number {conroller.lastActorHit}");
             }
-
-            Debug.Log("boom");
         }
     }
 
@@ -55,5 +62,11 @@ public class Explosion : MonoBehaviourPunCallbacks
     void Destroye()
     {
         Destroy(gameObject);
+    }
+
+    [PunRPC]
+    public void UpdateActorNum(int newAcNum)
+    {
+        actorNum = newAcNum;
     }
 }

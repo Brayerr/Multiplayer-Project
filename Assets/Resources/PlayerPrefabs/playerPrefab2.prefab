@@ -539,6 +539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbbc5b1edac16143bc531318d522670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UPDATE_PLAYER_ACTOR_HIT: UpdateActorNum
   maxHP: 3
   currentHP: 0
   lookAt: {fileID: 7753275541757632877}

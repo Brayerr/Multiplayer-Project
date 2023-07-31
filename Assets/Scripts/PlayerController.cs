@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Photon.Pun;
+using Photon.Realtime;
 
 [Serializable]
 public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
-    public static event Action PlayerDied;
+    public string UPDATE_PLAYER_ACTOR_HIT = nameof(UpdateActorNum);
+
 
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
     public PlayerNameLookAt lookAt;
-    public float lastActorHit;
+    public int lastActorHit;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -113,7 +115,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         if (photonView.AmOwner)
         {
-            
+
 
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
@@ -182,11 +184,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     void ShootArrow()
     {
+        print("shootarrow called");
         var shot = PhotonNetwork.Instantiate("Arrow", shootingPosition.position, Quaternion.identity);
         shot.transform.Rotate(orientation.transform.eulerAngles);
         if (shot.TryGetComponent<MoveArrow>(out MoveArrow arrow))
         {
-            arrow.actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
+            PhotonView pv = shot.GetPhotonView();
+            //arrow.actorNum = pv.OwnerActorNr;
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                arrow.photonView.RPC(arrow.UPDATE_ARROW_ACTOR_NUM, RpcTarget.MasterClient, pv.OwnerActorNr);
+            }
+            else
+            {
+                arrow.photonView.RPC(arrow.UPDATE_ARROW_ACTOR_NUM, RpcTarget.All, pv.OwnerActorNr);
+            }
             print($"arrow actornum is {arrow.actorNum}");
         }
     }
@@ -199,7 +211,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     public void Respawn()
     {
         rb.velocity = Vector3.zero;
-        transform.position = new Vector3(random.Next(0, 5), random.Next(0, 5), 1);
+        lastActorHit = 0;
     }
 
     #region Animations
@@ -241,5 +253,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
             print("assigning playercontroller");
             OnlineGameManager.Instance.SetPlayerControllerLocally(this);
         }
+    }
+
+    [PunRPC]
+    public void UpdateActorNum(int newAcNum)
+    {
+        lastActorHit = newAcNum;
     }
 }

@@ -5,10 +5,12 @@ using System;
 using Photon.Pun;
 
 public class MoveArrow : MonoBehaviourPun
-{   
+{
+    public string UPDATE_ARROW_ACTOR_NUM = nameof(UpdateActorNum);
+
     float arrowForce = 2000;
     [SerializeField] Rigidbody rb;
-    public float actorNum;
+    public int actorNum;
 
     private void Start()
     {
@@ -23,10 +25,15 @@ public class MoveArrow : MonoBehaviourPun
             var go = PhotonNetwork.Instantiate("Explosion", hitPoint, Quaternion.identity);
             if (go.TryGetComponent<Explosion>(out Explosion explosion))
             {
-                explosion.actorNum = actorNum;
+                //print("arrow actor num in explosion: " + actorNum);
+                explosion.photonView.RPC(explosion.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.All, actorNum);
+                //explosion.actorNum = actorNum;
                 print($"explosion actor num is {explosion.actorNum}");
             }
-            Debug.Log("hit");
+            else
+            {
+                print("coudent get player controller component");
+            }
         }
             Destroy(gameObject);
     }
@@ -36,5 +43,9 @@ public class MoveArrow : MonoBehaviourPun
         rb.AddForce(transform.forward * arrowForce);
     }
 
-
+    [PunRPC]
+    public void UpdateActorNum(int newAcNum)
+    {
+        actorNum = newAcNum;
+    }
 }

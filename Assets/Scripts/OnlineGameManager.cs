@@ -10,6 +10,9 @@ using Random = UnityEngine.Random;
 using Unity.VisualScripting;
 using System.Linq;
 using Photon.Pun.UtilityScripts;
+using System;
+using Unity.VisualScripting.FullSerializer;
+using UnityEditor;
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
 {
@@ -19,7 +22,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private const string SET_PLAYER_CONTROLLER = nameof(SetPlayerController);
     private const string INITIALIZE_PLAYER = nameof(InitializePlayer);
     private const string SPAWN_PLAYER = nameof(SpawnPlayer);
-    private const string UPDATE_SPAWN_POINTS = nameof(UpdateSpawnPoints);
+    private const string UPDATE_SPAWN_POINTS = nameof(UpdateSpawnPointsRPC);
+    private const string RESPAWN = nameof(RespawnPlayerRPC);
 
     [SerializeField] private List<int> activePlayers = new List<int>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
@@ -35,12 +39,12 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
+        Shredder.OnPlayerDeath += Respawn;
     }
 
     private void Start()
     {
 
-        PlayerController.PlayerDied += AskToRemovePlayer;
 
         PlayerController pc;
 
@@ -131,9 +135,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         playersInitialized++;
         if (playersInitialized >= PhotonNetwork.CurrentRoom.PlayerCount)
         {
-            photonView.RPC("TestSpawnPoints", RpcTarget.All);
-            //ShareSpawnPoints();
-            //photonView.RPC("TestSpawnPoints", RpcTarget.All);
+            ShareSpawnPoints();
         }
 
     }
@@ -157,14 +159,16 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             spawnPoints[i].transform.position,
             transform.rotation).GetComponent<PlayerController>();
 
+        localPlayerController.SetSpawn(i);
         localPlayerCam.SetOrientation(localPlayerController.orientation);
         photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
     [PunRPC]
-    public void RespawnPlayer()
+    public void RespawnPlayerRPC()
     {
         localPlayerController.transform.position = spawnPoints[localPlayerController.spawnPoint].transform.position;
+        localPlayerController.Respawn();
     }
 
     [PunRPC]
@@ -209,26 +213,15 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         print("restarting");
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        StartCoroutine(DisplayScore());
         // Exit the room
-        PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
-        PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene(0);
+        Invoke("LoadLobby", 5);
     }
 
     [PunRPC]
-    public void UpdateSpawnPoints(string data)
+    public void UpdateSpawnPointsRPC(string data)
     {
-        SpawnPoint[] spawnData = JsonUtility.FromJson<SpawnPoint[]>(data);
-        spawnPoints = spawnData;
-        foreach (SpawnPoint spawnPoint in spawnPoints)
-        {
-            print(spawnPoint.isTaken);
-        }
-    }
-
-    [PunRPC]
-    public void TestSpawnPoints()
-    {
+        ReadSpawnArray(JsonUtility.FromJson<SpawnPointArray>(data));
         foreach (SpawnPoint spawnPoint in spawnPoints)
         {
             print(spawnPoint.isTaken);
@@ -236,6 +229,13 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     #endregion
+
+    public void LoadLobby()
+    {
+        PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene(0);
+    }
 
     public void SetPlayerControllerLocally(PlayerController newLocalController)
     {
@@ -285,6 +285,16 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public PlayerCam GetPlayerCamera() => localPlayerCam;
+
+    void Respawn(Player deadPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC(RESPAWN, deadPlayer);
+        }
+    }
+
     void InitializeSpawnPoints()
     {
         for (int i = 0; i < spawnPoints.Length; i++)
@@ -295,8 +305,51 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     void ShareSpawnPoints()
     {
-        string spawnData = JsonUtility.ToJson(spawnPoints);
+        SpawnPointArray encapsulatedData = new(spawnPoints);
+        string spawnData = JsonUtility.ToJson(encapsulatedData);
+        print(spawnData);
         photonView.RPC(UPDATE_SPAWN_POINTS, RpcTarget.All, spawnData);
     }
 
+    IEnumerator DisplayScore()
+    {
+        OnlineScoreManager.Instance.scoreboard.SetActive(true);
+        yield return new WaitForSeconds(5);
+        OnlineScoreManager.Instance.scoreboard.SetActive(false);
+
+    }
+
+    void ReadSpawnArray(SpawnPointArray dataArray)
+    {
+        bool[] data = new bool[spawnPoints.Length];
+        Array.Copy(dataArray.GetPointsState(), data, spawnPoints.Length);
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            spawnPoints[i].isTaken = data[i];
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Shredder.OnPlayerDeath -= Respawn;
+    }
+}
+
+public class SpawnPointArray
+{
+    public bool[] points;
+
+    public SpawnPointArray(SpawnPoint[] array)
+    {
+        points = new bool[array.Length];
+        for (int i = 0; i < array.Length; i++)
+        {
+            points[i] = array[i].isTaken;
+        }
+    }
+
+    public bool[] GetPointsState()
+    {
+        return points;
+    }
 }
