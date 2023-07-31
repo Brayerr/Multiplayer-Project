@@ -47,6 +47,7 @@ public class Shredder : MonoBehaviourPun
                 PhotonView pv = other.gameObject.GetPhotonView();
                 if (pv != null && pv.IsMine)
                 {
+                    CheckPlayerToLookAt(other);
                     OnlineGameManager.Instance.photonView.RPC("RemovePlayer", Photon.Pun.RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
                     print("player died");
                 }
