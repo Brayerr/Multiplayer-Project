@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using Photon.Pun;
 
+[Serializable]
 public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     public static event Action PlayerDied;
@@ -59,13 +60,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     private void Start()
     {
+        OnlineGameManager.Instance.PlayerInitialized += SendPlayerController;
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         anim = GetComponentInChildren<Animator>();
         readyToJump = true;
         currentHP = maxHP;
         random = new System.Random();
-        
+
     }
 
     private void Update()
@@ -94,7 +96,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     private void FixedUpdate()
     {
-        if (photonView.AmOwner) MovePlayer();
+        if (photonView.AmOwner)
+        {
+            if (OnlineGameManager.Instance.GetLocalPlayerController() == null)
+            {
+                OnlineGameManager.Instance.SetPlayerControllerLocally(this);
+            }
+
+            MovePlayer();
+        }
     }
 
     public Transform GetOrientation() => orientation;
@@ -103,6 +113,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         if (photonView.AmOwner)
         {
+            
+
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
 
@@ -213,14 +225,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         if (info.photonView.AmOwner)
         {
-            currentPhotonViewOnObject = info.photonView;
             OnlineGameManager.Instance.SetPlayerControllerLocally(this);
-            OnlineGameManager.Instance.AddPlayerController(this);
         }
     }
 
     public void SetSpawn(int spawnID)
     {
         spawnPoint = spawnID;
+    }
+
+    public void SendPlayerController(int oldActorNumber)
+    {
+        if (oldActorNumber == photonView.CreatorActorNr)
+        {
+            print("assigning playercontroller");
+            OnlineGameManager.Instance.SetPlayerControllerLocally(this);
+        }
     }
 }
