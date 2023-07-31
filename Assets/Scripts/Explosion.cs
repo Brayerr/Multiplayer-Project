@@ -22,12 +22,12 @@ public class Explosion : MonoBehaviourPunCallbacks
         vfxName = vfxGameObject.name;
         vfxGameObject = PhotonNetwork.Instantiate("VFX/" + vfxName, transform.position, transform.rotation);
         pickedVfxTransform = vfxGameObject.transform;
+        Destroy(gameObject, 5f);
 
 
         Explode(transform.position);
     }
 
-    
 
 
     void Explode(Vector3 hitPoint)
