@@ -30,6 +30,7 @@ public class PlayerCam : MonoBehaviourPun
             }
             return;
         }
+
         transform.position = orientation.position;
 
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;

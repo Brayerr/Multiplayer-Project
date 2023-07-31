@@ -25,6 +25,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private const string UPDATE_SPAWN_POINTS = nameof(UpdateSpawnPointsRPC);
     private const string RESPAWN = nameof(RespawnPlayerRPC);
 
+    [SerializeField] Transform cameraLock;
     [SerializeField] private List<int> activePlayers = new List<int>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
 
@@ -258,8 +259,26 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             photonView.RPC("RemovePlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+            CheckPlayerToLookAt(photonView);
             print("activating remove RPC");
+
         }
+    }
+
+    public void CheckPlayerToLookAt(PhotonView view)
+    {
+        // Arena Look
+        localPlayerCam.SetOrientation(cameraLock);
+
+        // Player Kill Cam
+#if false
+        foreach (var lookAtView in PhotonNetwork.PhotonViews)
+        {
+            
+
+        }
+
+#endif  
     }
 
     public void EndGameLoop()
