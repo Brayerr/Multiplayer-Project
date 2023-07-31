@@ -208,10 +208,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         print("restarting");
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        // Exit the room
-        PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
-        PhotonNetwork.LeaveRoom();
         StartCoroutine(DisplayScore());
+        // Exit the room
         Invoke("LoadLobby", 5);
     }
 
@@ -239,6 +237,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     public void LoadLobby()
     {
+        PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
+        PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene(0);
     }
 
