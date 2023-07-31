@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
+using Photon.Realtime;
 
 public class Shredder : MonoBehaviourPun
 {
+    public static event Action<Player> OnPlayerDeath;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,7 +27,8 @@ public class Shredder : MonoBehaviourPun
                     OnlineScoreManager.Instance.UpdatePlayerDeaths(pc.photonView.OwnerActorNr, 1);
                 }
                 pc.TakeDamage();
-                pc.Respawn();
+                OnPlayerDeath.Invoke(pc.photonView.Controller);
+                //pc.Respawn();
             }
 
             else

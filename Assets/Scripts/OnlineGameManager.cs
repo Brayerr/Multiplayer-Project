@@ -22,7 +22,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private const string SET_PLAYER_CONTROLLER = nameof(SetPlayerController);
     private const string INITIALIZE_PLAYER = nameof(InitializePlayer);
     private const string SPAWN_PLAYER = nameof(SpawnPlayer);
-    private const string UPDATE_SPAWN_POINTS = nameof(UpdateSpawnPoints);
+    private const string UPDATE_SPAWN_POINTS = nameof(UpdateSpawnPointsRPC);
+    private const string RESPAWN = nameof(RespawnPlayerRPC);
 
     [SerializeField] private List<int> activePlayers = new List<int>();
     private List<PlayerController> playerControllers = new List<PlayerController>();
@@ -38,6 +39,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
+        Shredder.OnPlayerDeath += Respawn;
     }
 
     private void Start()
@@ -134,9 +136,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         playersInitialized++;
         if (playersInitialized >= PhotonNetwork.CurrentRoom.PlayerCount)
         {
-            photonView.RPC("TestSpawnPoints", RpcTarget.All);
             ShareSpawnPoints();
-            //photonView.RPC("TestSpawnPoints", RpcTarget.All);
         }
 
     }
@@ -165,7 +165,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void RespawnPlayer()
+    public void RespawnPlayerRPC()
     {
         localPlayerController.transform.position = spawnPoints[localPlayerController.spawnPoint].transform.position;
     }
@@ -219,18 +219,9 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void UpdateSpawnPoints(string data)
+    public void UpdateSpawnPointsRPC(string data)
     {
         ReadSpawnArray(JsonUtility.FromJson<SpawnPointArray>(data));
-        foreach (SpawnPoint spawnPoint in spawnPoints)
-        {
-            print(spawnPoint.isTaken);
-        }
-    }
-
-    [PunRPC]
-    public void TestSpawnPoints()
-    {
         foreach (SpawnPoint spawnPoint in spawnPoints)
         {
             print(spawnPoint.isTaken);
@@ -284,6 +275,14 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         {
             //player ded
             print("if is not inactive (meaning completely gone), u can see this");
+        }
+    }
+
+    void Respawn(Player deadPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC(RESPAWN, deadPlayer);
         }
     }
 
