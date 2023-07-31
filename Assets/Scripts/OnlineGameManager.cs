@@ -11,6 +11,8 @@ using Unity.VisualScripting;
 using System.Linq;
 using Photon.Pun.UtilityScripts;
 using System;
+using Unity.VisualScripting.FullSerializer;
+using UnityEditor;
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
 {
@@ -219,9 +221,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateSpawnPoints(string data)
     {
-        SpawnPointArray spawnData = JsonUtility.FromJson<SpawnPointArray>(data);
-        print(data);
-        Array.Copy(spawnData.ToSpawnPointArray(), spawnPoints, spawnPoints.Length);
+        ReadSpawnArray(JsonUtility.FromJson<SpawnPointArray>(data));
         foreach (SpawnPoint spawnPoint in spawnPoints)
         {
             print(spawnPoint.isTaken);
@@ -302,6 +302,16 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         print(spawnData);
         photonView.RPC(UPDATE_SPAWN_POINTS, RpcTarget.All, spawnData);
     }
+
+    void ReadSpawnArray(SpawnPointArray dataArray)
+    {
+        bool[] data = new bool[spawnPoints.Length];
+        Array.Copy(dataArray.GetPointsState(), data, spawnPoints.Length);
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            spawnPoints[i].isTaken = data[i];
+        }
+    }
 }
 
 public class SpawnPointArray
@@ -317,13 +327,8 @@ public class SpawnPointArray
         }
     }
 
-    public SpawnPoint[] ToSpawnPointArray()
+    public bool[] GetPointsState()
     {
-        SpawnPoint[] returnArray = new SpawnPoint[points.Length];
-        for (int i = 0; i < points.Length; i++)
-        {
-            returnArray[i].isTaken = points[i];
-        }
-        return returnArray;
+        return points;
     }
 }
