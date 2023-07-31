@@ -29,6 +29,6 @@ public class PlayerNameLookAt : MonoBehaviourPun
 
     void Update()
     {
-        transform.LookAt(Camera.main.transform);
+        transform.LookAt(Camera.main.transform.forward);
     }
 }
