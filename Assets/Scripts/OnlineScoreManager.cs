@@ -85,20 +85,19 @@ public class OnlineScoreManager : MonoBehaviourPun
     [PunRPC]
     public void UpdateScoreboard()
     {
-        if (PhotonNetwork.IsMasterClient)
+
+        foreach (var item in scoreCells)
         {
-            foreach (var item in scoreCells)
+            foreach (var player in PhotonNetwork.PlayerList)
             {
-                foreach (var player in PhotonNetwork.PlayerList)
+                if (item.actorNum == player.ActorNumber)
                 {
-                    if (item.actorNum == player.ActorNumber)
-                    {
-                        item.SetKillsText(player.CustomProperties[Constants.PLAYER_KILLS_KEY].ToString());
-                        item.SetDeathsText(player.CustomProperties[Constants.PLAYER_DEATHS_KEY].ToString());
-                    }
+                    item.SetKillsText(player.CustomProperties[Constants.PLAYER_KILLS_KEY].ToString());
+                    item.SetDeathsText(player.CustomProperties[Constants.PLAYER_DEATHS_KEY].ToString());
                 }
             }
         }
+
     }
 
     #endregion
