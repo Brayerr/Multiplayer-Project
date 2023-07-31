@@ -218,8 +218,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateSpawnPoints(string data)
     {
-        SpawnPoint[] spawnData = JsonUtility.FromJson<SpawnPoint[]>(data);
-        spawnPoints = spawnData;
+        SpawnPointArray spawnData = JsonUtility.FromJson<SpawnPointArray>(data);
+        spawnPoints = spawnData.ToArray();
         foreach (SpawnPoint spawnPoint in spawnPoints)
         {
             print(spawnPoint.isTaken);
@@ -308,6 +308,11 @@ public class SpawnPointArray
 
     public SpawnPointArray(SpawnPoint[] array)
     {
-        points=array;
+        points = array;
+    }
+
+    public SpawnPoint[] ToArray()
+    {
+        return points;
     }
 }
