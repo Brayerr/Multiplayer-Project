@@ -25,7 +25,7 @@ public class MoveArrow : MonoBehaviourPun
             {
                 //print("arrow actor num in explosion: " + actorNum);
                 //explosion.photonView.RPC(explosion.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.All, actorNum);
-                explosion.actorNum = actorNum;
+                explosion.photonView.TransferOwnership(photonView.Owner);
                 print($"explosion actor num is {explosion.actorNum}");
             }
             else

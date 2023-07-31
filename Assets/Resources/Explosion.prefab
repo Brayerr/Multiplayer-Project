@@ -117,7 +117,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 8498119996091966654}
@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0db7a684395d211438d5c8ad647c7fe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UPDATE_EXPLOSION_ACTOR_NUM: UpdateActorNum
   VFXs:
   - {fileID: 4021103657954561961, guid: 68ae097edd659c948abe68856601718a, type: 3}
   - {fileID: 5880797563127281583, guid: e792a43a25102c94cac6dbfa99942b2b, type: 3}
