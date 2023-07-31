@@ -315,7 +315,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         OnlineScoreManager.Instance.scoreboard.SetActive(false);
 
     }
-}
+
     void ReadSpawnArray(SpawnPointArray dataArray)
     {
         bool[] data = new bool[spawnPoints.Length];
