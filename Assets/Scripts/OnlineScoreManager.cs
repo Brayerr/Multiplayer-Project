@@ -41,15 +41,17 @@ public class OnlineScoreManager : MonoBehaviourPun
             var go = Instantiate(playerCell, scoreboard.transform);
             var cell = go.GetComponent<PlayerScoreCell>();
             cell.SetNameText(item.NickName);
-            cell.SetKillsText("0");
-            cell.SetDeathsText("0");
             cell.SetActorNum(item.ActorNumber);
             item.SetCustomProperties(new Hashtable { { Constants.PLAYER_KILLS_KEY, 0 } });
             item.SetCustomProperties(new Hashtable { { Constants.PLAYER_DEATHS_KEY, 0 } });
+            cell.SetKillsText(item.CustomProperties[Constants.PLAYER_KILLS_KEY].ToString());
+            cell.SetDeathsText(item.CustomProperties[Constants.PLAYER_DEATHS_KEY].ToString());
             scoreCells.Add(cell);
         }
     }
 
+
+    [PunRPC]
     public void UpdatePlayerKills(float actorNum, int amount)
     {
         foreach (var item in PhotonNetwork.PlayerList)
@@ -62,6 +64,7 @@ public class OnlineScoreManager : MonoBehaviourPun
         photonView.RPC("UpdateScoreboard", RpcTarget.AllViaServer);
     }
 
+    [PunRPC]
     public void UpdatePlayerDeaths(float actorNum, int amount)
     {
         foreach (var item in PhotonNetwork.PlayerList)
@@ -73,6 +76,9 @@ public class OnlineScoreManager : MonoBehaviourPun
         }
         photonView.RPC("UpdateScoreboard", RpcTarget.AllViaServer);
     }
+
+
+
 
     #region RPCS
 
