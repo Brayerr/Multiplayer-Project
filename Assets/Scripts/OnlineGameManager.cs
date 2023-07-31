@@ -49,18 +49,12 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             photonView.RPC(INITIALIZE_PLAYER, RpcTarget.MasterClient);
 
 
-                localPlayerCam.SetOrientation(localPlayerController.orientation);
-                localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
-                photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
-                return;
-            }
-            }
+            //go = PhotonNetwork.Instantiate($"PlayerPrefabs/playerPrefab{PhotonNetwork.LocalPlayer.CustomProperties[Constants.PLAYER_CHARACTER_ID_PROPERTY_KEY]}", new Vector3(0, 3, -8), transform.rotation);
 
 
-            localPlayerCam.SetOrientation(localPlayerController.orientation);
-            localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
-            photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
-            photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+            //localPlayerCam.SetOrientation(localPlayerController.orientation);
+            //localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
+            //photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
         }
         else
         {
@@ -118,7 +112,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
                 }
             }
             newPlayer.SetCustomProperties(oldPlayer.CustomProperties);
-            
+
             photonView.RPC(SET_PLAYER_CONTROLLER, newPlayer, oldPlayer.ActorNumber);
         }
         else
@@ -164,7 +158,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             transform.rotation).GetComponent<PlayerController>();
 
         localPlayerCam.SetOrientation(localPlayerController.orientation);
-        localPlayerController.lookAt.UpdatePlayerName(localPlayerController.photonView.Owner.NickName);
         photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
