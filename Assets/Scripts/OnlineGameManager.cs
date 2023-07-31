@@ -160,6 +160,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             spawnPoints[i].transform.position,
             transform.rotation).GetComponent<PlayerController>();
 
+        localPlayerController.SetSpawn(i);
         localPlayerCam.SetOrientation(localPlayerController.orientation);
         photonView.RPC("AddPlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
     }
