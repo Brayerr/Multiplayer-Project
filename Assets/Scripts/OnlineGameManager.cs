@@ -212,7 +212,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
         PhotonNetwork.LeaveRoom();
         StartCoroutine(DisplayScore());
-        SceneManager.LoadScene(0);
+        Invoke("LoadLobby", 5);
     }
 
     [PunRPC]
@@ -236,6 +236,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     #endregion
+
+    public void LoadLobby()
+    {
+        SceneManager.LoadScene(0);
+    }
 
     public void SetPlayerControllerLocally(PlayerController newLocalController)
     {
