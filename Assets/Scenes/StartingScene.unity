@@ -5424,8 +5424,6 @@ MonoBehaviour:
   playerUIPrefab: {fileID: 1960603385298047019, guid: 546ca43f911700b4cb0c940c33b1d2b9,
     type: 3}
   playerUIContext: {fileID: 1113256557}
-  PlayerPrefab: {fileID: 4606884242282006273, guid: 20981b3d5f31be94e82429a786ccbf22,
-    type: 3}
 --- !u!224 &1060789074
 RectTransform:
   m_ObjectHideFlags: 0

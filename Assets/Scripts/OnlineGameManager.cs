@@ -244,12 +244,14 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     public void SetPlayerControllerLocally(PlayerController newLocalController)
     {
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_CONTROLLER_VIEW_ID, newLocalController.photonView.ViewID } });
         localPlayerController = newLocalController;
     }
 
     public void SetPlayerCam(PlayerCam newPlayerCam)
     {
         print("set player cam");
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_CAM_VIEW_ID, newPlayerCam.photonView.ViewID } });
         localPlayerCam = newPlayerCam;
     }
 
@@ -278,15 +280,54 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
         print($"{otherPlayer.NickName} left room, isInactive: {otherPlayer.IsInactive}");
 
+        PlayerController viewController;
+        PlayerCam viewCam;
+
         if (otherPlayer.IsInactive)
         {
             //player can still return
             print("if is inactive, u can see this");
+            foreach (var view in PhotonNetwork.PhotonViewCollection)
+            {
+                if (view.ViewID == (int)otherPlayer.CustomProperties[Constants.PLAYER_CONTROLLER_VIEW_ID])
+                {
+
+                    viewController = view.GetComponent<PlayerController>();
+                    
+                    viewController.setNewOwner = false;
+
+                }
+                if (view.ViewID == (int)otherPlayer.CustomProperties[Constants.PLAYER_CAM_VIEW_ID])
+                {
+                    viewCam = view.GetComponent<PlayerCam>();
+                    viewCam.setNewOwner = false;
+                }
+            }
         }
         else
         {
             //player ded
             print("if is not inactive (meaning completely gone), u can see this");
+            foreach(var view in PhotonNetwork.PhotonViewCollection)
+            {
+                if(view.ViewID == (int)otherPlayer.CustomProperties[Constants.PLAYER_CONTROLLER_VIEW_ID])
+                {
+
+                    viewController = view.GetComponent<PlayerController>();
+                    if(viewController.setNewOwner == false)
+                    {
+                        viewController.ActivateSickoMode();
+                    }
+                }
+                if (view.ViewID == (int)otherPlayer.CustomProperties[Constants.PLAYER_CAM_VIEW_ID])
+                {
+                    viewCam = view.GetComponent<PlayerCam>();
+                    if(viewCam.setNewOwner == false)
+                    {
+                        viewCam.ActivateSickoMode();
+                    }
+                }
+            }
         }
     }
 
@@ -310,5 +351,14 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(5);
         OnlineScoreManager.Instance.scoreboard.SetActive(false);
 
+    }
+
+    [ContextMenu("print player properties")]
+    public void PrintPlayerProperties()
+    {
+        foreach(var property in PhotonNetwork.LocalPlayer.CustomProperties)
+        {
+            print($"{property.ToString()}: {property.Value.ToString()}");
+        }
     }
 }

@@ -54,6 +54,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     Rigidbody rb;
 
+    public bool setNewOwner = false;
+    [SerializeField] bool SICKO_MODE = false;
+    float spinSpeed = 50f;
+
     public int spawnPoint { get; private set; }
 
     private void Start()
@@ -72,9 +76,27 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        
+        if (SICKO_MODE)
+        {
+            if(shootCooldown <= 0)
+            {
+                TriggerShoot();
+                Invoke("ShootArrow", .5f);
+                shootCooldown = 1;
+                isCountingDown = true;
+            }
+            float rotationAmount = spinSpeed * Time.deltaTime;
 
-        MyInput();
-        SpeedControl();
+            Quaternion newRotation = orientation.rotation * Quaternion.Euler(0f, rotationAmount, 0f);
+
+            orientation.rotation = newRotation;
+        }
+        else
+        {
+            MyInput();
+            SpeedControl();
+        }
 
         // handle drag
         if (grounded)
@@ -90,6 +112,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
             shootCooldown = 0;
 
         }
+
     }
 
     private void FixedUpdate()
@@ -111,7 +134,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         if (photonView.AmOwner)
         {
-            
+
 
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
@@ -237,7 +260,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
         if (oldActorNumber == photonView.CreatorActorNr)
         {
             print("assigning playercontroller");
+            setNewOwner = true;
             OnlineGameManager.Instance.SetPlayerControllerLocally(this);
         }
+    }
+
+
+    public void ActivateSickoMode()
+    {
+        SICKO_MODE = true;
     }
 }

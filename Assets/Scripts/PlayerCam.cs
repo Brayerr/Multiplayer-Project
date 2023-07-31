@@ -12,6 +12,9 @@ public class PlayerCam : MonoBehaviourPun
     float xRotation;
     float yRotation;
 
+    [SerializeField] bool SICKO_MODE = false;
+    public bool setNewOwner = false;
+
     private void Start()
     {
         OnlineGameManager.Instance.PlayerInitialized += SendPlayerCam;
@@ -32,6 +35,10 @@ public class PlayerCam : MonoBehaviourPun
         }
         transform.position = orientation.position;
 
+        if(SICKO_MODE)
+        {
+            return;
+        }
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
 
@@ -55,8 +62,14 @@ public class PlayerCam : MonoBehaviourPun
     {
         if(oldActorNumber == photonView.CreatorActorNr)
         {
+            setNewOwner = true;
             OnlineGameManager.Instance.SetPlayerCam(this);
             SetOrientation(OnlineGameManager.Instance.GetLocalPlayerController().orientation);
         }
+    }
+
+    public void ActivateSickoMode()
+    {
+        SICKO_MODE = true;
     }
 }

@@ -27,5 +27,9 @@ public static class Constants
     public const string PLAYER_KILLS_KEY = "Kills";
     public const string PLAYER_DEATHS_KEY = "Deaths";
 
+    public const string PLAYER_CONTROLLER_VIEW_ID = "ControllerViewID";
+    public const string PLAYER_CAM_VIEW_ID = "CamViewID";
+
+
     public static string[] ProprtiesToClearOnLeaveRoom = { PLAYER_CHARACTER_ID_PROPERTY_KEY,PLAYER_READY_PROPERTY_KEY,PING_HASHTABLE_NAME };
 }
