@@ -180,6 +180,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     void ShootArrow()
     {
+        print("shootarrow called");
         var shot = PhotonNetwork.Instantiate("Arrow", shootingPosition.position, Quaternion.identity);
         shot.transform.Rotate(orientation.transform.eulerAngles);
         if (shot.TryGetComponent<MoveArrow>(out MoveArrow arrow))
