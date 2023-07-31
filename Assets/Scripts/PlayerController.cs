@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Photon.Pun;
+using Photon.Realtime;
 
 [Serializable]
 public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
@@ -210,7 +211,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     public void Respawn()
     {
         rb.velocity = Vector3.zero;
-        transform.position = new Vector3(random.Next(0, 5), random.Next(0, 5), 2);
+        lastActorHit = 0;
     }
 
     #region Animations

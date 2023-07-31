@@ -168,6 +168,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void RespawnPlayerRPC()
     {
         localPlayerController.transform.position = spawnPoints[localPlayerController.spawnPoint].transform.position;
+        localPlayerController.Respawn();
     }
 
     [PunRPC]
