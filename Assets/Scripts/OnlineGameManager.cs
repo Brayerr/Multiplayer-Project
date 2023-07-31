@@ -128,7 +128,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         if (playersInitialized >= PhotonNetwork.CurrentRoom.PlayerCount)
         {
             photonView.RPC("TestSpawnPoints", RpcTarget.All);
-            //ShareSpawnPoints();
+            ShareSpawnPoints();
             //photonView.RPC("TestSpawnPoints", RpcTarget.All);
         }
 
@@ -296,7 +296,19 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     void ShareSpawnPoints()
     {
-        string spawnData = JsonUtility.ToJson(spawnPoints);
+        SpawnPointArray encapsulatedData = new(spawnPoints);
+        string spawnData = JsonUtility.ToJson(encapsulatedData);
+        print(spawnData);
         photonView.RPC(UPDATE_SPAWN_POINTS, RpcTarget.All, spawnData);
+    }
+}
+
+public class SpawnPointArray
+{
+    public SpawnPoint[] points;
+
+    public SpawnPointArray(SpawnPoint[] array)
+    {
+        points=array;
     }
 }
