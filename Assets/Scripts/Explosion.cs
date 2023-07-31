@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class Explosion : MonoBehaviourPunCallbacks
 {
+    public string UPDATE_EXPLOSION_ACTOR_NUM = nameof(UpdateActorNum);
+
     [SerializeField] List<GameObject> VFXs;
 
     Transform pickedVfxTransform;
@@ -24,6 +26,13 @@ public class Explosion : MonoBehaviourPunCallbacks
 
         Explode(transform.position);
     }
+
+    [PunRPC]
+    public void UpdateActorNum(int newAcNum)
+    {
+        actorNum = newAcNum;
+    }
+
 
     void Explode(Vector3 hitPoint)
     {

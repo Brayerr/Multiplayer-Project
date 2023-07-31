@@ -23,7 +23,9 @@ public class MoveArrow : MonoBehaviourPun
             var go = PhotonNetwork.Instantiate("Explosion", hitPoint, Quaternion.identity);
             if (go.TryGetComponent<Explosion>(out Explosion explosion))
             {
-                explosion.actorNum = actorNum;
+                print("arrow actor num in explosion: " + actorNum);
+                explosion.photonView.RPC(explosion.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.All, actorNum);
+                //explosion.actorNum = actorNum;
                 print($"explosion actor num is {explosion.actorNum}");
             }
             else
