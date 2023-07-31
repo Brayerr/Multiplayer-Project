@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using Photon.Pun;
 
+[Serializable]
 public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     public static event Action PlayerDied;
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
     public PlayerNameLookAt lookAt;
+    public float lastActorHit;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -43,6 +45,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     [Header("Animations")]
     Animator anim;
 
+    PhotonView currentPhotonViewOnObject;
 
     public Transform orientation;
 
@@ -57,13 +60,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     private void Start()
     {
+        OnlineGameManager.Instance.PlayerInitialized += SendPlayerController;
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         anim = GetComponentInChildren<Animator>();
         readyToJump = true;
         currentHP = maxHP;
         random = new System.Random();
-        
+
     }
 
     private void Update()
@@ -92,15 +96,25 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     private void FixedUpdate()
     {
-        if (photonView.IsMine) MovePlayer();
+        if (photonView.AmOwner)
+        {
+            if (OnlineGameManager.Instance.GetLocalPlayerController() == null)
+            {
+                OnlineGameManager.Instance.SetPlayerControllerLocally(this);
+            }
+
+            MovePlayer();
+        }
     }
 
     public Transform GetOrientation() => orientation;
 
     private void MyInput()
     {
-        if (photonView.IsMine)
+        if (photonView.AmOwner)
         {
+            
+
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
 
@@ -170,6 +184,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     {
         var shot = PhotonNetwork.Instantiate("Arrow", shootingPosition.position, Quaternion.identity);
         shot.transform.Rotate(orientation.transform.eulerAngles);
+        if (shot.TryGetComponent<MoveArrow>(out MoveArrow arrow))
+        {
+            arrow.actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
+            print($"arrow actornum is {arrow.actorNum}");
+        }
     }
 
     public void TakeDamage()
@@ -204,15 +223,23 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        if (info.photonView.IsMine)
+        if (info.photonView.AmOwner)
         {
-            OnlineGameManager.Instance.SetPlayerController(this);
-            OnlineGameManager.Instance.AddPlayerController(this);
+            OnlineGameManager.Instance.SetPlayerControllerLocally(this);
         }
     }
 
     public void SetSpawn(int spawnID)
     {
         spawnPoint = spawnID;
+    }
+
+    public void SendPlayerController(int oldActorNumber)
+    {
+        if (oldActorNumber == photonView.CreatorActorNr)
+        {
+            print("assigning playercontroller");
+            OnlineGameManager.Instance.SetPlayerControllerLocally(this);
+        }
     }
 }

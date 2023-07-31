@@ -11,7 +11,7 @@ public class Explosion : MonoBehaviourPunCallbacks
     Transform pickedVfxTransform;
 
     GameObject vfxGameObject;
-
+    public float actorNum;
     string vfxName;
     // Start is called before the first frame update
     void Start()
@@ -31,8 +31,13 @@ public class Explosion : MonoBehaviourPunCallbacks
         Collider[] hitColliders = Physics.OverlapSphere(hitPoint, 5);
         foreach (var hitCollider in hitColliders)
         {
-            //hitCollider.attachedRigidbody?.AddExplosionForce(500, hitPoint, 5, 0.05f);
             hitCollider.attachedRigidbody?.AddForce((hitPoint - hitCollider.transform.position).normalized * -20, ForceMode.Impulse);
+            if (hitCollider.gameObject.TryGetComponent(out PlayerController conroller))
+            {
+                conroller.lastActorHit = actorNum;
+                print($"player last hit by actor number {conroller.lastActorHit}");
+            }
+
             Debug.Log("boom");
         }
     }

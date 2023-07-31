@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 4059417116633964975}
+  actorNum: 0
 --- !u!54 &4059417116633964975
 Rigidbody:
   m_ObjectHideFlags: 0
