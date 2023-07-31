@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     Rigidbody rb;
 
     public bool setNewOwner = false;
-    [SerializeField] bool SICKO_MODE = false;
+    [SerializeField] public bool SICKO_MODE = false;
     float spinSpeed = 50f;
 
     public int spawnPoint { get; private set; }

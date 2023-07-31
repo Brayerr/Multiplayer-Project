@@ -251,7 +251,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     public void SetPlayerCam(PlayerCam newPlayerCam)
     {
         print("set player cam");
-        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_CAM_VIEW_ID, newPlayerCam.photonView.ViewID } });
+        //PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { Constants.PLAYER_CAM_VIEW_ID, newPlayerCam.photonView.ViewID } });
         localPlayerCam = newPlayerCam;
     }
 
@@ -281,7 +281,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         print($"{otherPlayer.NickName} left room, isInactive: {otherPlayer.IsInactive}");
 
         PlayerController viewController;
-        PlayerCam viewCam;
 
         if (otherPlayer.IsInactive)
         {
@@ -296,11 +295,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
                     
                     viewController.setNewOwner = false;
 
-                }
-                if (view.ViewID == (int)otherPlayer.CustomProperties[Constants.PLAYER_CAM_VIEW_ID])
-                {
-                    viewCam = view.GetComponent<PlayerCam>();
-                    viewCam.setNewOwner = false;
                 }
             }
         }
@@ -317,14 +311,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
                     if(viewController.setNewOwner == false)
                     {
                         viewController.ActivateSickoMode();
-                    }
-                }
-                if (view.ViewID == (int)otherPlayer.CustomProperties[Constants.PLAYER_CAM_VIEW_ID])
-                {
-                    viewCam = view.GetComponent<PlayerCam>();
-                    if(viewCam.setNewOwner == false)
-                    {
-                        viewCam.ActivateSickoMode();
                     }
                 }
             }

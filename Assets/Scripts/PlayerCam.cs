@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerCam : MonoBehaviourPun
 {
@@ -35,7 +36,7 @@ public class PlayerCam : MonoBehaviourPun
         }
         transform.position = orientation.position;
 
-        if(SICKO_MODE)
+        if (SICKO_MODE)
         {
             return;
         }
