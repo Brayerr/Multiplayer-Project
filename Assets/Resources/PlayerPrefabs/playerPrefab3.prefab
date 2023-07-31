@@ -406,7 +406,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 1002043764917382731}
@@ -729,6 +729,7 @@ MonoBehaviour:
   maxHP: 3
   currentHP: 0
   lookAt: {fileID: 8294891007246854889}
+  lastActorHit: 0
   moveSpeed: 12
   groundDrag: 5
   jumpForce: 12
@@ -747,8 +748,6 @@ MonoBehaviour:
   shootingPosition: {fileID: 2108474353}
   shootCooldown: 0
   orientation: {fileID: 2003298663356072888}
-  cameraPos: {fileID: 0}
-  moveCam: {fileID: 0}
 --- !u!136 &645151648
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -853,11 +852,10 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 7035640007630850973}
-  - {fileID: 1002043764917382731}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
