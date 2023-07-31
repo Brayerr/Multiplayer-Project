@@ -9,6 +9,9 @@ using ExitGames.Client.Photon.StructWrapping;
 using Unity.VisualScripting;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using System;
+using UnityEditor.Experimental.GraphView;
+using System.Collections;
+using System.Runtime.InteropServices;
 
 public class PunMultiManagerScript : MonoBehaviourPunCallbacks
 {
@@ -26,6 +29,10 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
     [Header("Lobby Panel")]
     [SerializeField] private GameObject lobbyPanel;
     [Space]
+
+    [Header("ServerSearch")]
+    [SerializeField] private Button findServerButton;
+    [SerializeField] private Slider findServerMaxPlayerSlider;
 
     [Header("Room Info Panel")]
     [SerializeField] TMP_Text masterStatus;
@@ -576,6 +583,42 @@ public class PunMultiManagerScript : MonoBehaviourPunCallbacks
         Hashtable pingHashtable = new();
         pingHashtable.Add(Constants.PING_HASHTABLE_NAME, PhotonNetwork.GetPing());
         PhotonNetwork.SetPlayerCustomProperties(pingHashtable);
+    }
+
+    public void SearchForServersButton()
+    {
+        findServerButton.interactable = false;
+
+        if (!FindServersWithSameMaxPlayerCount((int)findServerMaxPlayerSlider.value))
+        {
+            // didnt find any available servers with the desired player count
+            StartCoroutine(FindServerButtonInteractableDelay(2f));
+            return;
+        }
+    }
+
+    IEnumerator FindServerButtonInteractableDelay(float timeToWait)
+    {
+        TMP_Text text = findServerButton.GetComponentInChildren<TMP_Text>();
+        text.text = "<color=red>No Server Found</color>";
+        yield return new WaitForSeconds(timeToWait);
+        text.text = "Search Servers";
+        findServerButton.interactable = true;
+    }
+
+    bool FindServersWithSameMaxPlayerCount(int desiredCount)
+    {
+        foreach (var roominfo in cachedRoomInfos)
+        {
+            if (roominfo.MaxPlayers == desiredCount && roominfo.PlayerCount < roominfo.MaxPlayers)
+            {
+                // Add Join room logic
+                PhotonNetwork.JoinRoom(roominfo.Name);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static string ExtractPlayerPing(Player player)
