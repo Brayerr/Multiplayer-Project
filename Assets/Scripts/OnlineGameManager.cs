@@ -211,7 +211,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         // Exit the room
         PhotonNetwork.RemovePlayerCustomProperties(Constants.ProprtiesToClearOnLeaveRoom);
         PhotonNetwork.LeaveRoom();
-        StartCoroutine("DisplayScore");
+        StartCoroutine(DisplayScore());
     }
 
     [PunRPC]
@@ -298,7 +298,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         photonView.RPC(UPDATE_SPAWN_POINTS, RpcTarget.All, spawnData);
     }
 
-    IEnumerable DisplayScore()
+    IEnumerator DisplayScore()
     {
         OnlineScoreManager.Instance.scoreboard.SetActive(true);
         yield return new WaitForSeconds(5);
