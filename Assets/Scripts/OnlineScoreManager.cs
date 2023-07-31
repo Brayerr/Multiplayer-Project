@@ -55,7 +55,7 @@ public class OnlineScoreManager : MonoBehaviourPun
 
 
     [PunRPC]
-    public void UpdatePlayerKills(float actorNum, int amount)
+    public void UpdatePlayerKills(int actorNum, int amount)
     {
         foreach (var item in PhotonNetwork.PlayerList)
         {
@@ -68,7 +68,7 @@ public class OnlineScoreManager : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void UpdatePlayerDeaths(float actorNum, int amount)
+    public void UpdatePlayerDeaths(int actorNum, int amount)
     {
         foreach (var item in PhotonNetwork.PlayerList)
         {
