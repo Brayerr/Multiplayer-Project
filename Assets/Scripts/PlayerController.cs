@@ -7,8 +7,6 @@ using Photon.Pun;
 [Serializable]
 public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
-    public static event Action PlayerDied;
-
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;

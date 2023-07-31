@@ -40,7 +40,6 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
 
-        PlayerController.PlayerDied += AskToRemovePlayer;
 
         PlayerController pc;
 

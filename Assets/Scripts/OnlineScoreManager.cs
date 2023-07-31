@@ -44,8 +44,11 @@ public class OnlineScoreManager : MonoBehaviourPun
             cell.SetActorNum(item.ActorNumber);
             cell.SetKillsText("0");
             cell.SetDeathsText("0");
-            item.SetCustomProperties(new Hashtable { { Constants.PLAYER_KILLS_KEY, 0 } });
-            item.SetCustomProperties(new Hashtable { { Constants.PLAYER_DEATHS_KEY, 0 } });
+            if (PhotonNetwork.IsMasterClient)
+            {
+                item.SetCustomProperties(new Hashtable { { Constants.PLAYER_KILLS_KEY, 0 } });
+                item.SetCustomProperties(new Hashtable { { Constants.PLAYER_DEATHS_KEY, 0 } });
+            }
             scoreCells.Add(cell);
         }
     }
