@@ -184,7 +184,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
         shot.transform.Rotate(orientation.transform.eulerAngles);
         if (shot.TryGetComponent<MoveArrow>(out MoveArrow arrow))
         {
-            arrow.actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
+            PhotonView pv = shot.GetPhotonView();
+            arrow.actorNum = pv.OwnerActorNr;
             print($"arrow actornum is {arrow.actorNum}");
         }
     }
