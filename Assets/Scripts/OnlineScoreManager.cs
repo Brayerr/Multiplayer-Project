@@ -42,10 +42,10 @@ public class OnlineScoreManager : MonoBehaviourPun
             var cell = go.GetComponent<PlayerScoreCell>();
             cell.SetNameText(item.NickName);
             cell.SetActorNum(item.ActorNumber);
+            cell.SetKillsText("0");
+            cell.SetDeathsText("0");
             item.SetCustomProperties(new Hashtable { { Constants.PLAYER_KILLS_KEY, 0 } });
             item.SetCustomProperties(new Hashtable { { Constants.PLAYER_DEATHS_KEY, 0 } });
-            cell.SetKillsText(item.CustomProperties[Constants.PLAYER_KILLS_KEY].ToString());
-            cell.SetDeathsText(item.CustomProperties[Constants.PLAYER_DEATHS_KEY].ToString());
             scoreCells.Add(cell);
         }
     }
