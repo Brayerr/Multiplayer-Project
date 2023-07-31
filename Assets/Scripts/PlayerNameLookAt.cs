@@ -10,13 +10,17 @@ public class PlayerNameLookAt : MonoBehaviourPun
 
     public Vector3 Fix;
 
-    public void UpdatePlayerName(string nickName)
+    private void Start()
+    {
+        if (photonView  != null)
+        {
+            UpdatePlayerName(photonView.Owner.NickName);
+        }
+    }
+
+    void UpdatePlayerName(string nickName)
     {
         gameObjectText.text = nickName;
-        if (photonView != null)
-        {
-            Debug.Log(photonView.ViewID);
-        }
         if (photonView.IsMine)
         {
             gameObject.SetActive(false);
