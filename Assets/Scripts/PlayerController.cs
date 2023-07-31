@@ -183,7 +183,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
     void ShootArrow()
     {
         var shot = PhotonNetwork.Instantiate("Arrow", shootingPosition.position, Quaternion.identity);
-        shot.transform.Rotate(new Vector3(orientation.transform.eulerAngles.x, orientation.transform.eulerAngles.y, PhotonNetwork.LocalPlayer.ActorNumber));
+        shot.transform.Rotate(orientation.transform.eulerAngles);
+        if (shot.TryGetComponent<MoveArrow>(out MoveArrow arrow))
+        {
+            arrow.actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
+            print($"arrow actornum is {arrow.actorNum}");
+        }
     }
 
     public void TakeDamage()

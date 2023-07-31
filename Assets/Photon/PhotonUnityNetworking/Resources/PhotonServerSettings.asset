@@ -59,6 +59,8 @@ MonoBehaviour:
   - RespawnPlayer
   - TestSpawnPoints
   - UpdateSpawnPoints
+  - UpdateScoreBoard
+  - UpdateScoreboard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
