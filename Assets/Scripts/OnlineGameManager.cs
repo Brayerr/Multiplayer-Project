@@ -302,6 +302,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         OnlineScoreManager.Instance.scoreboard.SetActive(true);
         yield return new WaitForSeconds(5);
+        OnlineScoreManager.Instance.scoreboard.SetActive(false);
         SceneManager.LoadScene(0);
 
     }
