@@ -6,6 +6,7 @@ using DG.Tweening;
 
 public class Explosion : MonoBehaviourPunCallbacks
 {
+    public string UPDATE_EXPLOSION_ACTOR_NUM = nameof(UpdateActorNum);
 
     [SerializeField] List<GameObject> VFXs;
 
@@ -38,7 +39,11 @@ public class Explosion : MonoBehaviourPunCallbacks
             hitCollider.attachedRigidbody?.AddForce((hitPoint - hitCollider.transform.position).normalized * -20, ForceMode.Impulse);
             if (hitCollider.gameObject.TryGetComponent(out PlayerController conroller))
             {
-                conroller.lastActorHit = actorNum;
+                if(PhotonNetwork.IsMasterClient)
+                {
+                    conroller.photonView.RPC(conroller.UPDATE_PLAYER_ACTOR_HIT, RpcTarget.All, actorNum);
+                }
+                //conroller.lastActorHit = actorNum;
                 print($"player last hit by actor number {conroller.lastActorHit}");
             }
         }
@@ -57,5 +62,11 @@ public class Explosion : MonoBehaviourPunCallbacks
     void Destroye()
     {
         Destroy(gameObject);
+    }
+
+    [PunRPC]
+    public void UpdateActorNum(int newAcNum)
+    {
+        actorNum = newAcNum;
     }
 }

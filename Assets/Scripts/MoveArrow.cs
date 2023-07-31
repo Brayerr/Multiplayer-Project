@@ -6,7 +6,7 @@ using Photon.Pun;
 
 public class MoveArrow : MonoBehaviourPun
 {
-    public string UPDATE_EXPLOSION_ACTOR_NUM = nameof(UpdateActorNum);
+    public string UPDATE_ARROW_ACTOR_NUM = nameof(UpdateActorNum);
 
     float arrowForce = 2000;
     [SerializeField] Rigidbody rb;
@@ -26,8 +26,8 @@ public class MoveArrow : MonoBehaviourPun
             if (go.TryGetComponent<Explosion>(out Explosion explosion))
             {
                 //print("arrow actor num in explosion: " + actorNum);
-                //explosion.photonView.RPC(explosion.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.All, actorNum);
-                explosion.actorNum = actorNum;
+                explosion.photonView.RPC(explosion.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.All, actorNum);
+                //explosion.actorNum = actorNum;
                 print($"explosion actor num is {explosion.actorNum}");
             }
             else

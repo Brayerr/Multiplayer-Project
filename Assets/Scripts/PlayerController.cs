@@ -7,6 +7,9 @@ using Photon.Pun;
 [Serializable]
 public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
+    public string UPDATE_PLAYER_ACTOR_HIT = nameof(UpdateActorNum);
+
+
     [Header("Attributes")]
     [SerializeField] int maxHP = 3;
     [SerializeField] public int currentHP;
@@ -189,11 +192,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
             //arrow.actorNum = pv.OwnerActorNr;
             if (!PhotonNetwork.IsMasterClient)
             {
-                arrow.photonView.RPC(arrow.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.MasterClient, pv.OwnerActorNr);
+                arrow.photonView.RPC(arrow.UPDATE_ARROW_ACTOR_NUM, RpcTarget.MasterClient, pv.OwnerActorNr);
             }
             else
             {
-                arrow.photonView.RPC(arrow.UPDATE_EXPLOSION_ACTOR_NUM, RpcTarget.All, pv.OwnerActorNr);
+                arrow.photonView.RPC(arrow.UPDATE_ARROW_ACTOR_NUM, RpcTarget.All, pv.OwnerActorNr);
             }
             print($"arrow actornum is {arrow.actorNum}");
         }
@@ -251,5 +254,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunInstantiateMagicC
         }
     }
 
-
+    [PunRPC]
+    public void UpdateActorNum(int newAcNum)
+    {
+        lastActorHit = newAcNum;
+    }
 }
